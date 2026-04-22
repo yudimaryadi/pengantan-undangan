@@ -3,25 +3,60 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-poppins: 'Poppins', sans-serif;
+  --font-amiri: 'Amiri', serif;
+
+  /* Sumbawa Design System */
+  --color-gold: #C9A84C;
+  --color-maroon: #7B1C2E;
+  --color-forest: #1E4D2B;
+  --color-ivory: #F5EDD6;
+  --color-copper: #B87333;
+  --color-cream: #FDF6E3;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-ivory);
+  color: var(--color-charcoal, #2C2C2C);
+  font-family: var(--font-poppins);
+  overflow-x: hidden;
+}
+
+/* Perspective for 3D animations */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+/* Will-change for GPU compositing on animated elements */
+.will-change-transform {
+  will-change: transform;
+}
+
+/* Arabic text direction */
+[dir="rtl"] {
+  direction: rtl;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Tap target helper */
+  .tap-target {
+    min-width: 44px;
+    min-height: 44px;
   }
 }
