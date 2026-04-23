@@ -3,13 +3,11 @@
 import { motion } from 'framer-motion'
 import { CalendarDays } from 'lucide-react'
 import { useCountdown } from '@/hooks/useCountdown'
-import { SumbawaPattern } from '../ui/SumbawaPattern'
-import { SumbawaBorder } from '../ui/SumbawaBorder'
-
-// Requirements: 5.1, 5.2, 5.4, 5.6
+import { FloralDivider } from '../ui/FloralDivider'
+import { FloralCorner } from '../ui/FloralCorner'
 
 interface CountdownSectionProps {
-  targetDate: string    // ISO date string: "2025-07-12T09:00:00+08:00"
+  targetDate: string
   eventName?: string
   googleCalendarUrl?: string
   isVisible?: boolean
@@ -25,22 +23,22 @@ interface CountdownBoxProps {
 function CountdownBox({ value, label, delay = 0, isVisible = false }: CountdownBoxProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={isVisible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-      transition={{ duration: 0.5, delay }}
-      className="flex flex-col items-center"
+      initial={{ opacity: 0, y: 20 }}
+      animate={isVisible ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay }}
+      className="flex flex-col items-center gap-2"
     >
       <div className="
-        w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24
-        bg-sumbawa-maroon border-2 border-sumbawa-gold
-        flex items-center justify-center
-        mb-2
+        relative w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24
+        bg-white border border-w-border shadow-soft
+        flex items-center justify-center overflow-hidden
       ">
-        <span className="text-sumbawa-gold font-poppins font-semibold text-2xl md:text-3xl lg:text-4xl">
+        <div className="absolute inset-0 bg-gradient-to-br from-w-rose-pale/30 to-transparent" />
+        <span className="relative text-w-ink font-cormorant font-light text-2xl md:text-3xl lg:text-4xl">
           {String(value).padStart(2, '0')}
         </span>
       </div>
-      <span className="text-sumbawa-ivory/70 font-poppins font-light text-xs tracking-widest uppercase">
+      <span className="text-w-muted font-poppins font-light text-[10px] tracking-[0.2em] uppercase">
         {label}
       </span>
     </motion.div>
@@ -48,86 +46,66 @@ function CountdownBox({ value, label, delay = 0, isVisible = false }: CountdownB
 }
 
 export function CountdownSection({
-  targetDate,
-  eventName = 'Hari Pernikahan Kami',
-  googleCalendarUrl,
-  isVisible = false,
+  targetDate, eventName = 'Hari Pernikahan Kami', googleCalendarUrl, isVisible = false,
 }: CountdownSectionProps) {
   const { days, hours, minutes, seconds, isExpired } = useCountdown(targetDate)
 
   return (
-    <section className="relative py-20 px-6 bg-sumbawa-maroon overflow-hidden">
-      <SumbawaPattern opacity={0.06} />
-      <SumbawaBorder position="top" className="absolute top-0 left-0 right-0" />
+    <section className="relative py-24 px-6 bg-w-bgAlt overflow-hidden">
+      <FloralCorner position="top-left" size="sm" />
+      <FloralCorner position="top-right" size="sm" />
+      <FloralCorner position="bottom-left" size="sm" />
+      <FloralCorner position="bottom-right" size="sm" />
 
-      <div className="relative z-10 max-w-3xl mx-auto text-center">
-        {/* Section title */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-w-gold-pale/20 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="relative z-10 max-w-2xl mx-auto text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.6 }}
-          className="mb-10"
+          animate={isVisible ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7 }}
+          className="mb-12"
         >
-          <p className="text-sumbawa-gold/70 font-poppins font-light text-xs tracking-[0.3em] uppercase mb-2">
+          <p className="text-w-rose font-poppins font-light text-[10px] tracking-[0.5em] uppercase mb-3">
             Save The Date
           </p>
-          <h2 className="text-sumbawa-ivory font-poppins font-semibold text-2xl sm:text-3xl">
+          <h2 className="font-cormorant font-light text-w-ink text-3xl sm:text-4xl tracking-wide">
             {eventName}
           </h2>
+          <FloralDivider variant="gold" className="mt-4 mb-0" />
         </motion.div>
 
         {isExpired ? (
-          /* Expired state */
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={isVisible ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 0.8 }}
-            className="py-8"
-          >
-            <p className="text-sumbawa-gold font-poppins font-light text-xl sm:text-2xl tracking-wide">
+          <motion.div initial={{ opacity: 0 }} animate={isVisible ? { opacity: 1 } : {}} transition={{ duration: 0.8 }} className="py-8">
+            <p className="text-w-rose font-cormorant font-light text-2xl sm:text-3xl tracking-wide">
               Alhamdulillah, kami telah menikah 🎉
             </p>
           </motion.div>
         ) : (
-          /* Countdown boxes */
-          <div className="flex items-center justify-center gap-4 sm:gap-6 md:gap-8 mb-10">
+          <div className="flex items-end justify-center gap-3 sm:gap-5 mb-12">
             <CountdownBox value={days} label="Hari" delay={0.1} isVisible={isVisible} />
-            <span className="text-sumbawa-gold text-2xl font-light mb-6">:</span>
+            <motion.span initial={{ opacity: 0 }} animate={isVisible ? { opacity: 1 } : {}} transition={{ delay: 0.2 }}
+              className="text-w-rose/50 text-2xl font-light mb-8">:</motion.span>
             <CountdownBox value={hours} label="Jam" delay={0.2} isVisible={isVisible} />
-            <span className="text-sumbawa-gold text-2xl font-light mb-6">:</span>
+            <motion.span initial={{ opacity: 0 }} animate={isVisible ? { opacity: 1 } : {}} transition={{ delay: 0.3 }}
+              className="text-w-rose/50 text-2xl font-light mb-8">:</motion.span>
             <CountdownBox value={minutes} label="Menit" delay={0.3} isVisible={isVisible} />
-            <span className="text-sumbawa-gold text-2xl font-light mb-6">:</span>
+            <motion.span initial={{ opacity: 0 }} animate={isVisible ? { opacity: 1 } : {}} transition={{ delay: 0.4 }}
+              className="text-w-rose/50 text-2xl font-light mb-8">:</motion.span>
             <CountdownBox value={seconds} label="Detik" delay={0.4} isVisible={isVisible} />
           </div>
         )}
 
-        {/* Save date button */}
         {googleCalendarUrl && (
-          <motion.a
-            href={googleCalendarUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+          <motion.a href={googleCalendarUrl} target="_blank" rel="noopener noreferrer"
             aria-label="Simpan tanggal pernikahan ke Google Calendar"
-            initial={{ opacity: 0, y: 10 }}
-            animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            className="
-              inline-flex items-center gap-2
-              min-h-[48px] px-6 py-3
-              border border-sumbawa-gold text-sumbawa-gold
-              font-poppins font-medium text-sm tracking-widest uppercase
-              hover:bg-sumbawa-gold hover:text-sumbawa-maroon
-              transition-all duration-300
-              focus:outline-none focus:ring-2 focus:ring-sumbawa-gold
-            "
-          >
+            initial={{ opacity: 0, y: 10 }} animate={isVisible ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5, delay: 0.5 }}
+            className="inline-flex items-center gap-2 min-h-[48px] px-6 py-3 border border-w-border text-w-muted font-poppins font-light text-xs tracking-[0.2em] uppercase hover:border-w-rose hover:text-w-rose bg-white shadow-soft transition-all duration-300 focus:outline-none focus:ring-1 focus:ring-w-rose">
             <CalendarDays className="w-4 h-4" />
             Simpan Tanggal
           </motion.a>
         )}
       </div>
-
-      <SumbawaBorder position="bottom" className="absolute bottom-0 left-0 right-0" />
     </section>
   )
 }

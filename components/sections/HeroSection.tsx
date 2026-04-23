@@ -2,11 +2,9 @@
 
 import Image from 'next/image'
 import { useState } from 'react'
-import { SumbawaBorder } from '../ui/SumbawaBorder'
-import { SumbawaPattern } from '../ui/SumbawaPattern'
+import { motion } from 'framer-motion'
+import { FloralCorner } from '../ui/FloralCorner'
 import { type PersonData } from '@/lib/weddingData'
-
-// Requirements: 8.1, 12.2
 
 interface HeroSectionProps {
   groom: PersonData
@@ -15,62 +13,79 @@ interface HeroSectionProps {
   isVisible?: boolean
 }
 
-export function HeroSection({ groom, bride, eventDate }: HeroSectionProps) {
+export function HeroSection({ groom, bride, eventDate, isVisible = false }: HeroSectionProps) {
   const [photoError, setPhotoError] = useState(false)
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-sumbawa-maroon">
-      <SumbawaPattern opacity={0.06} />
+    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-w-bg">
+      <FloralCorner position="top-left" size="md" />
+      <FloralCorner position="top-right" size="md" />
 
-      {/* Background photo */}
       <div className="absolute inset-0">
         {!photoError ? (
-          <Image
-            src={groom.photo}
-            alt={`${groom.fullName} & ${bride.fullName}`}
-            fill
-            className="object-cover"
-            priority
-            onError={() => setPhotoError(true)}
-          />
+          <Image src={groom.photo} alt={`${groom.fullName} & ${bride.fullName}`}
+            fill className="object-cover" priority onError={() => setPhotoError(true)} />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-sumbawa-maroon to-sumbawa-forest" />
+          <div className="w-full h-full bg-gradient-to-br from-w-bg to-w-bgAlt" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-b from-sumbawa-maroon/60 via-sumbawa-maroon/30 to-sumbawa-maroon/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-w-bg/55 via-w-bg/25 to-w-bg/65" />
+        <div className="absolute inset-0 bg-gradient-to-t from-w-rose/6 via-transparent to-transparent" />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 flex flex-col items-center px-6 py-16 text-center max-w-3xl mx-auto">
-        <p className="text-sumbawa-gold/80 font-poppins font-light text-xs tracking-[0.3em] uppercase mb-8">
+      <div className="relative z-10 flex flex-col items-center px-6 py-20 text-center max-w-2xl mx-auto">
+        <motion.p
+          initial={{ opacity: 0, letterSpacing: '0.1em' }}
+          animate={isVisible ? { opacity: 1, letterSpacing: '0.5em' } : {}}
+          transition={{ duration: 1.2 }}
+          className="text-w-rose font-poppins font-light text-[10px] tracking-[0.5em] uppercase mb-10"
+        >
           The Wedding of
-        </p>
+        </motion.p>
 
-        <div className="w-full max-w-md mb-4">
-          <SumbawaBorder position="top" />
-        </div>
-
-        {/* Groom name */}
-        <h2 className="text-sumbawa-gold font-poppins font-light tracking-widest text-3xl sm:text-4xl md:text-5xl lg:text-7xl leading-tight">
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          animate={isVisible ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.9, delay: 0.2 }}
+          className="font-cormorant font-light text-w-ink text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-none tracking-wide mb-4"
+        >
           {groom.fullName}
-        </h2>
+        </motion.h2>
 
-        <p className="text-sumbawa-ivory font-poppins font-light text-3xl my-2 opacity-60">
-          &amp;
-        </p>
+        <motion.div
+          initial={{ opacity: 0, scale: 0 }}
+          animate={isVisible ? { opacity: 1, scale: 1 } : {}}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="my-4 flex items-center gap-4"
+        >
+          <div className="h-px w-12 bg-w-border" />
+          <span className="text-w-rose font-cormorant text-2xl italic">&amp;</span>
+          <div className="h-px w-12 bg-w-border" />
+        </motion.div>
 
-        {/* Bride name */}
-        <h2 className="text-sumbawa-gold font-poppins font-light tracking-widest text-3xl sm:text-4xl md:text-5xl lg:text-7xl leading-tight">
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          animate={isVisible ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.9, delay: 0.3 }}
+          className="font-cormorant font-light text-w-ink text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-none tracking-wide mb-10"
+        >
           {bride.fullName}
-        </h2>
+        </motion.h2>
 
-        <div className="w-full max-w-md mt-4 mb-8">
-          <SumbawaBorder position="bottom" />
-        </div>
+        <motion.div
+          initial={{ opacity: 0, scaleX: 0 }}
+          animate={isVisible ? { opacity: 1, scaleX: 1 } : {}}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="w-24 h-px bg-w-border mb-6"
+        />
 
-        {/* Date */}
-        <p className="text-sumbawa-ivory font-poppins font-light text-base sm:text-lg tracking-widest">
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={isVisible ? { opacity: 1 } : {}}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="text-w-body font-poppins font-light text-sm tracking-[0.2em]"
+        >
           {eventDate}
-        </p>
+        </motion.p>
       </div>
     </section>
   )

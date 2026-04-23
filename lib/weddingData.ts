@@ -68,32 +68,32 @@ export const defaultQuranVerse: QuranVerseData = {
   surah: 'QS. Ar-Rum: 21',
 }
 
-// Gallery: 12 foto dari Unsplash (bebas lisensi)
+// Gallery: 12 foto HD dari Unsplash (bebas lisensi) — resolusi 1600px
 export const dummyGallery: string[] = [
-  // 1 — Couple di taman
-  'https://images.unsplash.com/photo-1519741497674-611481863552?w=800',
-  // 2 — Pasangan di pantai saat golden hour
-  'https://images.unsplash.com/photo-1529636798458-92182e662485?w=800',
+  // 1 — Couple romantis di taman bunga
+  'https://images.unsplash.com/photo-1519741497674-611481863552?w=1600&q=90&auto=format&fit=crop',
+  // 2 — Pasangan di pantai golden hour
+  'https://images.unsplash.com/photo-1529636798458-92182e662485?w=1600&q=90&auto=format&fit=crop',
   // 3 — Pengantin wanita dengan buket bunga
-  'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=800',
-  // 4 — Couple berpegangan tangan
-  'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=800',
-  // 5 — Ciuman di altar
-  'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=800',
-  // 6 — Detail cincin pernikahan
-  'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=800',
+  'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=1600&q=90&auto=format&fit=crop',
+  // 4 — Couple berpegangan tangan close-up
+  'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1600&q=90&auto=format&fit=crop',
+  // 5 — Pengantin di altar gereja
+  'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=1600&q=90&auto=format&fit=crop',
+  // 6 — Detail cincin pernikahan emas
+  'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=1600&q=90&auto=format&fit=crop',
   // 7 — Couple berjalan di jalan berbatu
-  'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=800',
-  // 8 — Pengantin wanita close-up
-  'https://images.unsplash.com/photo-1594552072238-b8a33785b6cd?w=800',
-  // 9 — Couple di bawah pohon
-  'https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=800',
-  // 10 — Dekorasi bunga pernikahan
-  'https://images.unsplash.com/photo-1478146059778-26028b07395a?w=800',
-  // 11 — Couple di ladang bunga
-  'https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=800',
-  // 12 — Momen first dance
-  'https://images.unsplash.com/photo-1501901609772-df0848060b33?w=800',
+  'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=1600&q=90&auto=format&fit=crop',
+  // 8 — Pengantin wanita portrait HD
+  'https://images.unsplash.com/photo-1607190074257-dd4b7af0309f?w=1600&q=90&auto=format&fit=crop',
+  // 9 — Couple di bawah pohon saat sunset
+  'https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=1600&q=90&auto=format&fit=crop',
+  // 10 — Dekorasi bunga pernikahan mewah
+  'https://images.unsplash.com/photo-1478146059778-26028b07395a?w=1600&q=90&auto=format&fit=crop',
+  // 11 — Couple di ladang bunga lavender
+  'https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=1600&q=90&auto=format&fit=crop',
+  // 12 — First dance momen bahagia
+  'https://images.unsplash.com/photo-1501901609772-df0848060b33?w=1600&q=90&auto=format&fit=crop',
 ]
 
 // Background music: instrumental romantis bebas royalti dari Pixabay
@@ -107,20 +107,20 @@ export const weddingData: WeddingData = {
     fullName: 'Gabriel Marchel',
     nickname: 'Mace',
     parentNames: 'Putra dari Bapak H. Syamsul & Ibu Hj. Rahmawati',
-    photo: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400',
+    photo: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=90&auto=format&fit=crop',
     instagram: 'macekaka',
   },
   bride: {
     fullName: 'Malika Anne Shelby',
     nickname: 'Anne',
     parentNames: 'Putri dari Bapak H. Jamaluddin & Ibu Hj. Fatimah',
-    photo: 'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=400',
+    photo: 'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=800&q=90&auto=format&fit=crop',
     instagram: 'cucu.ane',
   },
   events: [
     {
       name: 'Akad Nikah',
-      date: 'Sabtu, 12 Juli 2025',
+      date: 'Sabtu, 12 Oktober 2026',
       time: '09.00 - 11.00 WITA',
       venue: 'Masjid Agung Sumbawa',
       address: 'Jl. Garuda No. 1, Sumbawa Besar, NTB',
@@ -128,7 +128,7 @@ export const weddingData: WeddingData = {
     },
     {
       name: 'Resepsi',
-      date: 'Sabtu, 12 Juli 2025',
+      date: 'Sabtu, 12 Oktober 2026',
       time: '11.00 - 14.00 WITA',
       venue: 'Gedung Serbaguna Sumbawa',
       address: 'Jl. Diponegoro No. 5, Sumbawa Besar, NTB',

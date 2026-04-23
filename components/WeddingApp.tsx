@@ -32,7 +32,7 @@ function WeddingAppInner({ data }: WeddingAppProps) {
     : ''
 
   return (
-    <main className="min-h-screen bg-sumbawa-ivory font-poppins overflow-x-hidden">
+    <main className="min-h-screen bg-w-bg font-poppins overflow-x-hidden">
       {/* COVER phase */}
       {state === 'COVER' && (
         <CoverScreen

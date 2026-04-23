@@ -2,25 +2,21 @@
 
 import { useEffect, useRef } from 'react'
 import { motion, useAnimation } from 'framer-motion'
-import { SumbawaPattern } from './ui/SumbawaPattern'
-
-// Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 14.3
 
 interface AnimationLayerProps {
-  duration?: number     // Total animation duration in ms (default: 2500)
+  duration?: number
   isActive: boolean
   onComplete: () => void
 }
 
 export function AnimationLayer({
-  duration = 2500,
+  duration = 2800,
   isActive,
   onComplete,
 }: AnimationLayerProps) {
   const onCompleteRef = useRef(onComplete)
   const calledRef = useRef(false)
 
-  // Keep ref up to date without re-running effect
   useEffect(() => {
     onCompleteRef.current = onComplete
   }, [onComplete])
@@ -28,11 +24,11 @@ export function AnimationLayer({
   const leftControls = useAnimation()
   const rightControls = useAnimation()
   const containerControls = useAnimation()
+  const centerLineControls = useAnimation()
 
   useEffect(() => {
     if (!isActive) return
 
-    // Guard: only call onComplete once
     const safeComplete = () => {
       if (!calledRef.current) {
         calledRef.current = true
@@ -40,55 +36,50 @@ export function AnimationLayer({
       }
     }
 
-    // Check CSS 3D support
     const supports3D =
       typeof CSS !== 'undefined' &&
       CSS.supports('transform-style', 'preserve-3d')
 
     if (!supports3D) {
-      // Fallback: skip animation, go straight to content
       safeComplete()
       return
     }
 
-    // Book-open animation sequence
     const runAnimation = async () => {
-      const pageDuration = (duration - 500) / 1000  // seconds for page flip
-      const fadeDuration = 0.5
+      // Center line appears first
+      await centerLineControls.start({
+        scaleY: 1,
+        opacity: 1,
+        transition: { duration: 0.3, ease: 'easeOut' },
+      })
 
-      // Phase 1: Both pages cover the screen (initial state)
-      await Promise.all([
-        leftControls.set({ rotateY: 0 }),
-        rightControls.set({ rotateY: 0 }),
-      ])
-
-      // Phase 2 & 3: Pages open (staggered)
+      // Pages open with spring physics
       await Promise.all([
         rightControls.start({
           rotateY: -180,
           transition: {
-            duration: pageDuration,
-            delay: 0.3,
-            ease: [0.4, 0, 0.2, 1],
+            duration: (duration - 800) / 1000,
+            delay: 0.1,
+            ease: [0.25, 0.46, 0.45, 0.94],
           },
         }),
         leftControls.start({
           rotateY: 180,
           transition: {
-            duration: pageDuration,
-            delay: 0.6,
-            ease: [0.4, 0, 0.2, 1],
+            duration: (duration - 800) / 1000,
+            delay: 0.25,
+            ease: [0.25, 0.46, 0.45, 0.94],
           },
         }),
       ])
 
-      // Phase 4: Fade out container
+      // Fade out
       await containerControls.start({
         opacity: 0,
-        transition: { duration: fadeDuration },
+        scale: 1.02,
+        transition: { duration: 0.5, ease: 'easeIn' },
       })
 
-      // Phase 5: Call onComplete
       safeComplete()
     }
 
@@ -101,56 +92,116 @@ export function AnimationLayer({
   return (
     <motion.div
       animate={containerControls}
-      initial={{ opacity: 1 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-sumbawa-ivory overflow-hidden"
+      initial={{ opacity: 1, scale: 1 }}
+      className="fixed inset-0 z-50 overflow-hidden"
+      style={{ background: '#FDF8F5' }}
       aria-hidden="true"
     >
-      {/* Background pattern */}
-      <SumbawaPattern opacity={0.08} />
+      {/* Soft ambient glow */}
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse at center, rgba(196,120,138,0.08) 0%, transparent 70%)' }} />
 
-      {/* 3D book container */}
-      <div
-        className="relative w-full h-full flex"
-        style={{ perspective: '1200px' }}
-      >
-        {/* Left page */}
+      {/* 3D gate container */}
+      <div className="relative w-full h-full flex" style={{ perspective: '1400px' }}>
+
+        {/* Left gate door */}
         <motion.div
           animate={leftControls}
           initial={{ rotateY: 0 }}
-          className="w-1/2 h-full bg-sumbawa-ivory border-r border-sumbawa-gold/30 will-change-transform"
+          className="w-1/2 h-full will-change-transform"
           style={{
             transformStyle: 'preserve-3d',
             transformOrigin: 'left center',
             backfaceVisibility: 'hidden',
+            background: 'linear-gradient(135deg, #F5E8E8 0%, #FDF0F0 40%, #F5E8E8 100%)',
+            borderRight: '1px solid rgba(196,120,138,0.25)',
           }}
         >
-          <div className="w-full h-full flex items-center justify-center">
-            <div className="text-sumbawa-gold/20 text-9xl font-poppins font-light">
-              ✦
-            </div>
+          <div className="w-full h-full flex items-center justify-center relative overflow-hidden">
+            {/* Dot pattern */}
+            <div className="absolute inset-0 opacity-[0.04]"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='16' cy='16' r='1' fill='%23C4788A'/%3E%3C/svg%3E")`,
+                backgroundSize: '32px 32px',
+              }}
+            />
+            {/* Rotating ring */}
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+              className="w-24 h-24 rounded-full flex items-center justify-center"
+              style={{ border: '1px solid rgba(196,120,138,0.2)' }}
+            >
+              <div className="w-16 h-16 rounded-full flex items-center justify-center"
+                style={{ border: '1px solid rgba(196,120,138,0.3)' }}>
+                <div className="w-2 h-2 rotate-45" style={{ background: 'rgba(196,120,138,0.4)' }} />
+              </div>
+            </motion.div>
           </div>
+          {/* Right edge shadow */}
+          <div className="absolute right-0 top-0 bottom-0 w-8"
+            style={{ background: 'linear-gradient(to right, transparent, rgba(196,120,138,0.12))' }} />
         </motion.div>
 
-        {/* Right page */}
+        {/* Right gate door */}
         <motion.div
           animate={rightControls}
           initial={{ rotateY: 0 }}
-          className="w-1/2 h-full bg-sumbawa-ivory border-l border-sumbawa-gold/30 will-change-transform"
+          className="w-1/2 h-full will-change-transform"
           style={{
             transformStyle: 'preserve-3d',
             transformOrigin: 'right center',
             backfaceVisibility: 'hidden',
+            background: 'linear-gradient(225deg, #F5E8E8 0%, #FDF0F0 40%, #F5E8E8 100%)',
+            borderLeft: '1px solid rgba(196,120,138,0.25)',
           }}
         >
-          <div className="w-full h-full flex items-center justify-center">
-            <div className="text-sumbawa-gold/20 text-9xl font-poppins font-light">
-              ✦
-            </div>
+          <div className="w-full h-full flex items-center justify-center relative overflow-hidden">
+            <div className="absolute inset-0 opacity-[0.04]"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='16' cy='16' r='1' fill='%23C4788A'/%3E%3C/svg%3E")`,
+                backgroundSize: '32px 32px',
+              }}
+            />
+            <motion.div
+              animate={{ rotate: -360 }}
+              transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+              className="w-24 h-24 rounded-full flex items-center justify-center"
+              style={{ border: '1px solid rgba(196,120,138,0.2)' }}
+            >
+              <div className="w-16 h-16 rounded-full flex items-center justify-center"
+                style={{ border: '1px solid rgba(196,120,138,0.3)' }}>
+                <div className="w-2 h-2 rotate-45" style={{ background: 'rgba(196,120,138,0.4)' }} />
+              </div>
+            </motion.div>
           </div>
+          {/* Left edge shadow */}
+          <div className="absolute left-0 top-0 bottom-0 w-8"
+            style={{ background: 'linear-gradient(to left, transparent, rgba(196,120,138,0.12))' }} />
         </motion.div>
 
         {/* Center spine */}
-        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-sumbawa-gold/40 -translate-x-1/2" />
+        <motion.div
+          animate={centerLineControls}
+          initial={{ scaleY: 0, opacity: 0 }}
+          className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 origin-center"
+          style={{ background: 'linear-gradient(to bottom, transparent, rgba(196,120,138,0.5), transparent)' }}
+        />
+      </div>
+
+      {/* Center text */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2, duration: 0.6 }}
+          className="text-center"
+        >
+          <p className="font-cormorant text-2xl font-light tracking-widest italic"
+            style={{ color: 'rgba(196,120,138,0.5)' }}>
+            Selamat Datang
+          </p>
+        </motion.div>
       </div>
     </motion.div>
   )

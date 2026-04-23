@@ -3,27 +3,19 @@
 import { useState, useEffect, FormEvent } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Send, MessageCircle, AlertCircle, CheckCircle2, XCircle } from 'lucide-react'
-import { SumbawaPattern } from '../ui/SumbawaPattern'
-import { SumbawaBorder } from '../ui/SumbawaBorder'
 import { safeGetItem, safeSetItem, isLocalStorageAvailable } from '@/lib/storage'
+import { FloralDivider } from '../ui/FloralDivider'
+import { FloralCorner } from '../ui/FloralCorner'
 import { type WishItem } from '@/lib/weddingData'
-
-// Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 12.8, 14.6
 
 const STORAGE_KEY = 'wedding-wishes'
 
 function formatTimestamp(iso: string): string {
   try {
     return new Intl.DateTimeFormat('id-ID', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+      day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
     }).format(new Date(iso))
-  } catch {
-    return iso
-  }
+  } catch { return iso }
 }
 
 interface WishesSectionProps {
@@ -40,294 +32,166 @@ export function WishesSection({ isVisible = false, guestName = '' }: WishesSecti
   const [storageAvailable, setStorageAvailable] = useState(true)
   const [submitted, setSubmitted] = useState(false)
 
-  // Load wishes from localStorage on mount
   useEffect(() => {
-    const available = isLocalStorageAvailable()
-    setStorageAvailable(available)
-
+    setStorageAvailable(isLocalStorageAvailable())
     const stored = safeGetItem(STORAGE_KEY)
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored) as WishItem[]
-        setWishes(parsed)
-      } catch {
-        setWishes([])
-      }
-    }
+    if (stored) { try { setWishes(JSON.parse(stored) as WishItem[]) } catch { setWishes([]) } }
   }, [])
 
-  // Auto-fill nama dari ?to= param
-  useEffect(() => {
-    if (guestName) {
-      setName(guestName)
-    }
-  }, [guestName])
+  useEffect(() => { if (guestName) setName(guestName) }, [guestName])
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     setError('')
-
-    if (!name.trim()) {
-      setError('Nama tidak boleh kosong.')
-      return
-    }
-    if (!message.trim()) {
-      setError('Pesan ucapan tidak boleh kosong.')
-      return
-    }
-
-    const newWish: WishItem = {
-      name: name.trim(),
-      message: message.trim(),
-      attendance,
-      timestamp: new Date().toISOString(),
-    }
-
+    if (!name.trim()) { setError('Nama tidak boleh kosong.'); return }
+    if (!message.trim()) { setError('Pesan ucapan tidak boleh kosong.'); return }
+    const newWish: WishItem = { name: name.trim(), message: message.trim(), attendance, timestamp: new Date().toISOString() }
     const updated = [newWish, ...wishes]
     safeSetItem(STORAGE_KEY, JSON.stringify(updated))
     setWishes(updated)
     setMessage('')
-    // Pertahankan nama (tidak di-reset) agar tamu tidak perlu isi ulang
     setSubmitted(true)
     setTimeout(() => setSubmitted(false), 3000)
   }
 
   return (
-    <section className="relative py-20 px-6 bg-sumbawa-forest overflow-hidden">
-      <SumbawaPattern opacity={0.05} />
-      <SumbawaBorder position="top" className="absolute top-0 left-0 right-0" />
+    <section className="relative py-24 px-6 bg-w-bgAlt overflow-hidden">
+      <FloralCorner position="top-left" size="sm" />
+      <FloralCorner position="top-right" size="sm" />
+      <FloralCorner position="bottom-left" size="sm" />
+      <FloralCorner position="bottom-right" size="sm" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-w-rose-pale/25 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="relative z-10 max-w-2xl mx-auto">
-        {/* Section title */}
+      <div className="relative z-10 max-w-xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-10"
+          animate={isVisible ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7 }}
+          className="text-center mb-12"
         >
-          <p className="text-sumbawa-gold/70 font-poppins font-light text-xs tracking-[0.3em] uppercase mb-2">
-            Ucapan &amp; Konfirmasi
-          </p>
-          <h2 className="text-sumbawa-ivory font-poppins font-semibold text-2xl sm:text-3xl">
-            Kirim Ucapan
-          </h2>
+          <p className="text-w-rose font-poppins font-light text-[10px] tracking-[0.5em] uppercase mb-3">Ucapan &amp; Konfirmasi</p>
+          <h2 className="font-cormorant font-light text-w-ink text-3xl sm:text-4xl tracking-wide">Kirim Ucapan</h2>
+          <FloralDivider variant="rose" className="mt-4 mb-0" />
         </motion.div>
 
-        {/* Storage unavailable notice */}
         {!storageAvailable && (
-          <div className="flex items-start gap-2 bg-sumbawa-maroon/50 border border-sumbawa-gold/30 p-4 mb-6 text-sumbawa-ivory/80 text-sm font-poppins font-light">
-            <AlertCircle className="w-4 h-4 text-sumbawa-gold mt-0.5 flex-shrink-0" />
-            <p>Ucapan Anda tidak akan tersimpan setelah halaman ditutup karena penyimpanan lokal tidak tersedia.</p>
+          <div className="flex items-start gap-2 border border-w-border bg-white p-4 mb-6 text-w-muted text-xs font-poppins font-light shadow-soft">
+            <AlertCircle className="w-4 h-4 text-w-subtle mt-0.5 flex-shrink-0" />
+            <p>Ucapan tidak akan tersimpan setelah halaman ditutup.</p>
           </div>
         )}
 
-        {/* Form */}
         <motion.form
           initial={{ opacity: 0, y: 20 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          onSubmit={handleSubmit}
-          noValidate
-          className="mb-10"
+          animate={isVisible ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.1 }}
+          onSubmit={handleSubmit} noValidate className="mb-12 space-y-4"
         >
-          {/* Name input */}
-          <div className="mb-4">
-            <label
-              htmlFor="wish-name"
-              className="block text-sumbawa-gold font-poppins font-medium text-sm mb-2"
-            >
+          <div>
+            <label htmlFor="wish-name" className="block text-w-body font-poppins font-light text-xs tracking-[0.15em] uppercase mb-2">
               Nama Anda
             </label>
-            <input
-              id="wish-name"
-              type="text"
-              value={name}
+            <input id="wish-name" type="text" value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Masukkan nama Anda"
-              aria-required="true"
-              className="
-                w-full min-h-[44px] px-4 py-3
-                bg-sumbawa-ivory/10 border border-sumbawa-gold/40
-                text-sumbawa-ivory placeholder-sumbawa-ivory/40
-                font-poppins font-light text-base
-                focus:outline-none focus:border-sumbawa-gold focus:bg-sumbawa-ivory/15
-                transition-colors duration-200
-              "
+              placeholder="Masukkan nama Anda" aria-required="true"
+              className="w-full min-h-[44px] px-4 py-3 bg-white border border-w-border text-w-ink placeholder-w-subtle font-poppins font-light text-base focus:outline-none focus:border-w-rose/50 shadow-soft transition-colors duration-200"
             />
           </div>
 
-          {/* Attendance option */}
-          <div className="mb-4">
-            <p className="block text-sumbawa-gold font-poppins font-medium text-sm mb-3">
+          <div>
+            <p className="block text-w-body font-poppins font-light text-xs tracking-[0.15em] uppercase mb-3">
               Konfirmasi Kehadiran
             </p>
             <div className="flex gap-3">
-              {/* Hadir */}
-              <button
-                type="button"
-                onClick={() => setAttendance('hadir')}
-                aria-pressed={attendance === 'hadir'}
-                aria-label="Saya akan hadir"
-                className={`
-                  flex-1 flex items-center justify-center gap-2
-                  min-h-[48px] px-4 py-3
-                  border-2 font-poppins font-medium text-sm tracking-wide
-                  transition-all duration-200
-                  focus:outline-none focus:ring-2 focus:ring-sumbawa-gold
-                  ${attendance === 'hadir'
-                    ? 'bg-sumbawa-gold border-sumbawa-gold text-sumbawa-maroon'
-                    : 'bg-transparent border-sumbawa-gold/40 text-sumbawa-ivory/70 hover:border-sumbawa-gold hover:text-sumbawa-ivory'
-                  }
-                `}
-              >
-                <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
-                Hadir
+              <button type="button" onClick={() => setAttendance('hadir')}
+                aria-pressed={attendance === 'hadir'} aria-label="Saya akan hadir"
+                className={`flex-1 flex items-center justify-center gap-2 min-h-[48px] px-4 py-3 border font-poppins font-light text-xs tracking-[0.15em] uppercase transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-w-rose ${
+                  attendance === 'hadir'
+                    ? 'bg-w-rose text-white border-w-rose shadow-rose'
+                    : 'bg-white border-w-border text-w-muted hover:border-w-rose hover:text-w-rose shadow-soft'
+                }`}>
+                <CheckCircle2 className="w-3.5 h-3.5" />Hadir
               </button>
-
-              {/* Tidak Hadir */}
-              <button
-                type="button"
-                onClick={() => setAttendance('tidak_hadir')}
-                aria-pressed={attendance === 'tidak_hadir'}
-                aria-label="Saya tidak dapat hadir"
-                className={`
-                  flex-1 flex items-center justify-center gap-2
-                  min-h-[48px] px-4 py-3
-                  border-2 font-poppins font-medium text-sm tracking-wide
-                  transition-all duration-200
-                  focus:outline-none focus:ring-2 focus:ring-sumbawa-gold
-                  ${attendance === 'tidak_hadir'
-                    ? 'bg-sumbawa-maroon border-sumbawa-maroon text-sumbawa-ivory'
-                    : 'bg-transparent border-sumbawa-gold/40 text-sumbawa-ivory/70 hover:border-sumbawa-gold hover:text-sumbawa-ivory'
-                  }
-                `}
-              >
-                <XCircle className="w-4 h-4 flex-shrink-0" />
-                Tidak Hadir
+              <button type="button" onClick={() => setAttendance('tidak_hadir')}
+                aria-pressed={attendance === 'tidak_hadir'} aria-label="Saya tidak dapat hadir"
+                className={`flex-1 flex items-center justify-center gap-2 min-h-[48px] px-4 py-3 border font-poppins font-light text-xs tracking-[0.15em] uppercase transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-w-rose ${
+                  attendance === 'tidak_hadir'
+                    ? 'bg-w-mauve text-white border-w-mauve shadow-soft'
+                    : 'bg-white border-w-border text-w-muted hover:border-w-mauve hover:text-w-mauve shadow-soft'
+                }`}>
+                <XCircle className="w-3.5 h-3.5" />Tidak Hadir
               </button>
             </div>
           </div>
 
-          {/* Message textarea */}
-          <div className="mb-4">
-            <label
-              htmlFor="wish-message"
-              className="block text-sumbawa-gold font-poppins font-medium text-sm mb-2"
-            >
+          <div>
+            <label htmlFor="wish-message" className="block text-w-body font-poppins font-light text-xs tracking-[0.15em] uppercase mb-2">
               Ucapan &amp; Doa
             </label>
-            <textarea
-              id="wish-message"
-              value={message}
+            <textarea id="wish-message" value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Tuliskan ucapan dan doa terbaik Anda..."
-              rows={4}
-              aria-required="true"
-              className="
-                w-full px-4 py-3
-                bg-sumbawa-ivory/10 border border-sumbawa-gold/40
-                text-sumbawa-ivory placeholder-sumbawa-ivory/40
-                font-poppins font-light text-base
-                focus:outline-none focus:border-sumbawa-gold focus:bg-sumbawa-ivory/15
-                transition-colors duration-200
-                resize-none
-              "
+              rows={4} aria-required="true"
+              className="w-full px-4 py-3 bg-white border border-w-border text-w-ink placeholder-w-subtle font-poppins font-light text-base focus:outline-none focus:border-w-rose/50 shadow-soft transition-colors duration-200 resize-none"
             />
           </div>
 
-          {/* Error message */}
           {error && (
-            <p
-              id="wish-error"
-              role="alert"
-              className="text-red-300 font-poppins font-light text-sm mb-4 flex items-center gap-2"
-            >
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
-              {error}
+            <p role="alert" className="text-w-rose font-poppins font-light text-xs flex items-center gap-2">
+              <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />{error}
             </p>
           )}
 
-          {/* Success message */}
           <AnimatePresence>
             {submitted && (
-              <motion.p
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                className="text-green-300 font-poppins font-light text-sm mb-4"
-              >
-                ✓ Ucapan Anda telah terkirim. Terima kasih!
+              <motion.p initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                className="text-green-600 font-poppins font-light text-xs flex items-center gap-2">
+                <CheckCircle2 className="w-3.5 h-3.5" />Ucapan Anda telah terkirim. Terima kasih!
               </motion.p>
             )}
           </AnimatePresence>
 
-          {/* Submit button */}
-          <button
-            type="submit"
-            aria-label="Kirim ucapan"
-            className="
-              flex items-center gap-2
-              min-h-[48px] px-6 py-3
-              bg-sumbawa-gold text-sumbawa-maroon
-              font-poppins font-semibold text-sm tracking-widest uppercase
-              hover:bg-sumbawa-gold/90
-              transition-all duration-300
-              focus:outline-none focus:ring-2 focus:ring-sumbawa-gold focus:ring-offset-2 focus:ring-offset-sumbawa-forest
-            "
-          >
-            <Send className="w-4 h-4" />
-            Kirim Ucapan
+          <button type="submit" aria-label="Kirim ucapan"
+            className="group relative overflow-hidden flex items-center gap-2 min-h-[48px] px-6 py-3 bg-w-rose text-white font-poppins font-medium text-xs tracking-[0.2em] uppercase shadow-rose transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-w-rose focus:ring-offset-2 focus:ring-offset-w-bgAlt hover:bg-w-mauve">
+            <Send className="w-3.5 h-3.5" />Kirim Ucapan
           </button>
         </motion.form>
 
-        {/* Wishes list */}
         {wishes.length > 0 && (
           <div>
-            <div className="flex items-center gap-2 mb-6">
-              <MessageCircle className="w-5 h-5 text-sumbawa-gold" aria-hidden="true" />
-              <h3 className="text-sumbawa-ivory font-poppins font-medium text-base">
-                {wishes.length} Ucapan
-              </h3>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="h-px flex-1 bg-w-line" />
+              <div className="flex items-center gap-2 text-w-muted">
+                <MessageCircle className="w-3.5 h-3.5" aria-hidden="true" />
+                <span className="font-poppins font-light text-xs tracking-widest">{wishes.length} ucapan</span>
+              </div>
+              <div className="h-px flex-1 bg-w-line" />
             </div>
 
-            <div className="space-y-4 max-h-96 overflow-y-auto pr-2">
+            <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
               <AnimatePresence initial={false}>
                 {wishes.map((wish, index) => (
-                  <motion.div
-                    key={`${wish.timestamp}-${index}`}
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4 }}
-                    className="bg-sumbawa-ivory/10 border border-sumbawa-gold/20 p-4"
-                  >
+                  <motion.div key={`${wish.timestamp}-${index}`}
+                    initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}
+                    className="bg-white border border-w-line p-4 shadow-soft">
                     <div className="flex items-start justify-between gap-2 mb-2">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <p className="text-sumbawa-gold font-poppins font-medium text-sm">
-                          {wish.name}
-                        </p>
-                        {/* Attendance badge */}
+                        <p className="text-w-ink font-poppins font-medium text-sm">{wish.name}</p>
                         {wish.attendance === 'hadir' ? (
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-sumbawa-gold/20 border border-sumbawa-gold/40 text-sumbawa-gold text-xs font-poppins font-medium">
-                            <CheckCircle2 className="w-3 h-3" />
-                            Hadir
+                          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-green-50 border border-green-200 text-green-700 text-[10px] font-poppins">
+                            <CheckCircle2 className="w-2.5 h-2.5" />Hadir
                           </span>
                         ) : wish.attendance === 'tidak_hadir' ? (
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-sumbawa-maroon/40 border border-sumbawa-maroon/60 text-sumbawa-ivory/70 text-xs font-poppins font-medium">
-                            <XCircle className="w-3 h-3" />
-                            Tidak Hadir
+                          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-w-rose-pale border border-w-border text-w-rose text-[10px] font-poppins">
+                            <XCircle className="w-2.5 h-2.5" />Tidak Hadir
                           </span>
                         ) : null}
                       </div>
-                      <time
-                        dateTime={wish.timestamp}
-                        className="text-sumbawa-ivory/40 font-poppins font-light text-xs flex-shrink-0"
-                      >
+                      <time dateTime={wish.timestamp} className="text-w-subtle font-poppins font-light text-[10px] flex-shrink-0">
                         {formatTimestamp(wish.timestamp)}
                       </time>
                     </div>
-                    <p className="text-sumbawa-ivory/80 font-poppins font-light text-sm leading-relaxed">
-                      {wish.message}
-                    </p>
+                    <p className="text-w-body font-poppins font-light text-sm leading-relaxed">{wish.message}</p>
                   </motion.div>
                 ))}
               </AnimatePresence>
@@ -335,8 +199,6 @@ export function WishesSection({ isVisible = false, guestName = '' }: WishesSecti
           </div>
         )}
       </div>
-
-      <SumbawaBorder position="bottom" className="absolute bottom-0 left-0 right-0" />
     </section>
   )
 }

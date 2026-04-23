@@ -1,9 +1,8 @@
 'use client'
 
+import { motion } from 'framer-motion'
 import { Volume2, VolumeX } from 'lucide-react'
 import { useMusicPlayer } from '@/hooks/useMusicPlayer'
-
-// Requirements: 4.1, 4.5, 4.6, 4.7, 4.8, 4.10
 
 interface MusicPlayerProps {
   musicUrl: string
@@ -14,26 +13,34 @@ export function MusicPlayer({ musicUrl, autoPlay = true }: MusicPlayerProps) {
   const { isMuted, isPlaying, toggle } = useMusicPlayer(musicUrl, autoPlay)
 
   return (
-    <button
+    <motion.button
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4, delay: 0.5 }}
       onClick={toggle}
       aria-label={isMuted ? 'Aktifkan musik' : 'Matikan musik'}
       title={isMuted ? 'Aktifkan musik' : 'Matikan musik'}
-      className={`
-        fixed bottom-4 right-4 md:bottom-6 md:right-6
-        w-12 h-12 md:w-14 md:h-14
-        rounded-full bg-sumbawa-maroon border-2 border-sumbawa-gold
+      className="
+        fixed bottom-5 right-5 md:bottom-6 md:right-6
+        w-11 h-11 md:w-12 md:h-12
+        rounded-full
+        bg-white border border-w-border
         flex items-center justify-center
-        shadow-lg z-50 transition-all duration-300
-        hover:bg-sumbawa-gold hover:border-sumbawa-maroon
-        focus:outline-none focus:ring-2 focus:ring-sumbawa-gold focus:ring-offset-2
-        ${isPlaying && !isMuted ? 'animate-pulse' : ''}
-      `}
+        shadow-card z-50
+        hover:border-w-rose hover:text-w-rose
+        transition-all duration-300
+        focus:outline-none focus:ring-1 focus:ring-w-rose
+        text-w-muted
+      "
     >
-      {isMuted ? (
-        <VolumeX className="w-5 h-5 text-sumbawa-gold group-hover:text-sumbawa-maroon" />
-      ) : (
-        <Volume2 className="w-5 h-5 text-sumbawa-gold" />
+      {isPlaying && !isMuted && (
+        <motion.div
+          className="absolute inset-0 rounded-full border border-w-rose/30"
+          animate={{ scale: [1, 1.6], opacity: [0.6, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeOut' }}
+        />
       )}
-    </button>
+      {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+    </motion.button>
   )
 }

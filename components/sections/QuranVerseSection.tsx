@@ -1,11 +1,9 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { SumbawaPattern } from '../ui/SumbawaPattern'
-import { SumbawaBorder } from '../ui/SumbawaBorder'
+import { FloralDivider } from '../ui/FloralDivider'
+import { FloralCorner } from '../ui/FloralCorner'
 import { type QuranVerseData } from '@/lib/weddingData'
-
-// Requirements: 8.8
 
 interface QuranVerseSectionProps {
   verse: QuranVerseData
@@ -14,45 +12,59 @@ interface QuranVerseSectionProps {
 
 export function QuranVerseSection({ verse, isVisible = false }: QuranVerseSectionProps) {
   return (
-    <section className="relative py-20 px-6 bg-sumbawa-forest overflow-hidden">
-      <SumbawaPattern opacity={0.05} />
+    <section className="relative py-24 px-6 bg-w-bgAlt overflow-hidden">
+      <FloralCorner position="top-left" size="sm" />
+      <FloralCorner position="top-right" size="sm" />
+      <FloralCorner position="bottom-left" size="sm" />
+      <FloralCorner position="bottom-right" size="sm" />
 
-      <SumbawaBorder position="top" className="absolute top-0 left-0 right-0" />
+      {/* Soft center glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-w-rose-pale/40 rounded-full blur-3xl pointer-events-none" />
 
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
-        className="relative z-10 max-w-3xl mx-auto text-center"
-      >
-        {/* Arabic text */}
-        <p
-          className="text-sumbawa-gold font-amiri text-xl sm:text-2xl md:text-3xl lg:text-4xl leading-loose mb-8"
-          dir="rtl"
-          lang="ar"
+      <div className="relative z-10 max-w-2xl mx-auto text-center">
+        <FloralDivider variant="rose" className="mb-10" />
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={isVisible ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1, delay: 0.2 }}
+          className="text-w-ink/80 font-amiri text-2xl sm:text-3xl md:text-4xl leading-loose mb-10"
+          dir="rtl" lang="ar"
         >
           {verse.arabic}
-        </p>
+        </motion.p>
 
-        {/* Divider */}
-        <div className="flex items-center justify-center gap-4 mb-6">
-          <div className="h-px w-16 bg-sumbawa-gold/40" />
-          <span className="text-sumbawa-gold text-lg">✦</span>
-          <div className="h-px w-16 bg-sumbawa-gold/40" />
-        </div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isVisible ? { opacity: 1 } : {}}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="flex items-center justify-center gap-3 mb-8"
+        >
+          <div className="h-px w-8 bg-w-gold/40" />
+          <span className="text-w-gold text-xs">✦</span>
+          <div className="h-px w-8 bg-w-gold/40" />
+        </motion.div>
 
-        {/* Translation */}
-        <p className="text-sumbawa-ivory/90 font-poppins font-light text-sm sm:text-base leading-relaxed italic mb-6">
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          animate={isVisible ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="text-w-body font-poppins font-light text-sm sm:text-base leading-relaxed italic mb-6"
+        >
           &ldquo;{verse.translation}&rdquo;
-        </p>
+        </motion.p>
 
-        {/* Surah reference */}
-        <p className="text-sumbawa-gold font-poppins font-medium text-sm tracking-widest">
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={isVisible ? { opacity: 1 } : {}}
+          transition={{ duration: 0.6, delay: 0.7 }}
+          className="text-w-gold font-poppins font-medium text-xs tracking-[0.2em] uppercase"
+        >
           {verse.surah}
-        </p>
-      </motion.div>
+        </motion.p>
 
-      <SumbawaBorder position="bottom" className="absolute bottom-0 left-0 right-0" />
+        <FloralDivider variant="gold" className="mt-10" />
+      </div>
     </section>
   )
 }
