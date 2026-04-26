@@ -1,9 +1,41 @@
 // FloralDivider — elegant rose divider between sections
+// All coordinates pre-computed to avoid SSR hydration mismatch
 
 interface FloralDividerProps {
   className?: string
   variant?: 'rose' | 'gold' | 'minimal'
 }
+
+// Pre-computed: [0, 60, 120, 180, 240, 300] * 5 — mini rose petals
+const MINI_PETALS = [
+  { cx: 5,      cy: 0,      a: 0   },
+  { cx: 2.5,    cy: 4.330,  a: 60  },
+  { cx: -2.5,   cy: 4.330,  a: 120 },
+  { cx: -5,     cy: 0,      a: 180 },
+  { cx: -2.5,   cy: -4.330, a: 240 },
+  { cx: 2.5,    cy: -4.330, a: 300 },
+]
+
+// Pre-computed: [0, 45, 90, 135, 180, 225, 270, 315] * 7 — large rose outer petals
+const LARGE_OUTER = [
+  { cx: 7,      cy: 0,      a: 0   },
+  { cx: 4.950,  cy: 4.950,  a: 45  },
+  { cx: 0,      cy: 7,      a: 90  },
+  { cx: -4.950, cy: 4.950,  a: 135 },
+  { cx: -7,     cy: 0,      a: 180 },
+  { cx: -4.950, cy: -4.950, a: 225 },
+  { cx: 0,      cy: -7,     a: 270 },
+  { cx: 4.950,  cy: -4.950, a: 315 },
+]
+
+// Pre-computed: [0, 72, 144, 216, 288] * 3.5 — large rose inner petals
+const LARGE_INNER = [
+  { cx: 3.5,    cy: 0,      a: 0   },
+  { cx: 1.081,  cy: 3.329,  a: 72  },
+  { cx: -2.832, cy: 2.057,  a: 144 },
+  { cx: -2.832, cy: -2.057, a: 216 },
+  { cx: 1.081,  cy: -3.329, a: 288 },
+]
 
 export function FloralDivider({ className = '', variant = 'rose' }: FloralDividerProps) {
   const colors = {
@@ -20,66 +52,43 @@ export function FloralDivider({ className = '', variant = 'rose' }: FloralDivide
 
       {/* Center floral motif */}
       <svg width="80" height="32" viewBox="0 0 80 32" fill="none">
+
         {/* Left mini rose */}
         <g transform="translate(16, 16)">
-          {[0, 60, 120, 180, 240, 300].map((a) => {
-            const r = (a * Math.PI) / 180
-            return (
-              <ellipse key={a}
-                cx={Math.cos(r) * 5} cy={Math.sin(r) * 5}
-                rx="3" ry="5"
-                transform={`rotate(${a}, ${Math.cos(r) * 5}, ${Math.sin(r) * 5})`}
-                fill={c.petal} fillOpacity="0.7"
-              />
-            )
-          })}
+          {MINI_PETALS.map(({ cx, cy, a }) => (
+            <ellipse key={a} cx={cx} cy={cy} rx="3" ry="5"
+              transform={`rotate(${a}, ${cx}, ${cy})`}
+              fill={c.petal} fillOpacity="0.7" />
+          ))}
           <circle r="2.5" fill={c.center} fillOpacity="0.6" />
         </g>
 
         {/* Center large rose */}
         <g transform="translate(40, 16)">
-          {[0, 45, 90, 135, 180, 225, 270, 315].map((a) => {
-            const r = (a * Math.PI) / 180
-            return (
-              <ellipse key={a}
-                cx={Math.cos(r) * 7} cy={Math.sin(r) * 7}
-                rx="4" ry="6.5"
-                transform={`rotate(${a}, ${Math.cos(r) * 7}, ${Math.sin(r) * 7})`}
-                fill={c.petal} fillOpacity="0.75"
-              />
-            )
-          })}
-          {[0, 72, 144, 216, 288].map((a) => {
-            const r = (a * Math.PI) / 180
-            return (
-              <ellipse key={a}
-                cx={Math.cos(r) * 3.5} cy={Math.sin(r) * 3.5}
-                rx="2.5" ry="4"
-                transform={`rotate(${a}, ${Math.cos(r) * 3.5}, ${Math.sin(r) * 3.5})`}
-                fill={c.center} fillOpacity="0.8"
-              />
-            )
-          })}
+          {LARGE_OUTER.map(({ cx, cy, a }) => (
+            <ellipse key={a} cx={cx} cy={cy} rx="4" ry="6.5"
+              transform={`rotate(${a}, ${cx}, ${cy})`}
+              fill={c.petal} fillOpacity="0.75" />
+          ))}
+          {LARGE_INNER.map(({ cx, cy, a }) => (
+            <ellipse key={a} cx={cx} cy={cy} rx="2.5" ry="4"
+              transform={`rotate(${a}, ${cx}, ${cy})`}
+              fill={c.center} fillOpacity="0.8" />
+          ))}
           <circle r="2" fill={c.center} />
         </g>
 
         {/* Right mini rose */}
         <g transform="translate(64, 16)">
-          {[0, 60, 120, 180, 240, 300].map((a) => {
-            const r = (a * Math.PI) / 180
-            return (
-              <ellipse key={a}
-                cx={Math.cos(r) * 5} cy={Math.sin(r) * 5}
-                rx="3" ry="5"
-                transform={`rotate(${a}, ${Math.cos(r) * 5}, ${Math.sin(r) * 5})`}
-                fill={c.petal} fillOpacity="0.7"
-              />
-            )
-          })}
+          {MINI_PETALS.map(({ cx, cy, a }) => (
+            <ellipse key={a} cx={cx} cy={cy} rx="3" ry="5"
+              transform={`rotate(${a}, ${cx}, ${cy})`}
+              fill={c.petal} fillOpacity="0.7" />
+          ))}
           <circle r="2.5" fill={c.center} fillOpacity="0.6" />
         </g>
 
-        {/* Leaves between roses */}
+        {/* Leaves */}
         <g transform="translate(28, 16) rotate(-20)">
           <ellipse rx="5" ry="2.5" fill={c.leaf} fillOpacity="0.5" />
         </g>
@@ -87,7 +96,7 @@ export function FloralDivider({ className = '', variant = 'rose' }: FloralDivide
           <ellipse rx="5" ry="2.5" fill={c.leaf} fillOpacity="0.5" />
         </g>
 
-        {/* Gold dots */}
+        {/* Dots */}
         <circle cx="6" cy="16" r="1.5" fill={c.center} fillOpacity="0.3" />
         <circle cx="74" cy="16" r="1.5" fill={c.center} fillOpacity="0.3" />
       </svg>

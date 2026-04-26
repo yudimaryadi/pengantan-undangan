@@ -109,23 +109,22 @@ export function CoverScreen({
           transition={{ duration: 0.6, delay: 0.8 }}
           className="my-3 flex items-center gap-3"
         >
+          {/* Pre-computed petals for [0,72,144,216,288] * 5 */}
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-            {[0, 72, 144, 216, 288].map((a) => {
-              const r = (a * Math.PI) / 180
-              return <ellipse key={a} cx={10 + Math.cos(r) * 5} cy={10 + Math.sin(r) * 5}
-                rx="3" ry="4.5" transform={`rotate(${a}, ${10 + Math.cos(r) * 5}, ${10 + Math.sin(r) * 5})`}
-                fill="#D9A0AE" fillOpacity="0.6" />
-            })}
+            <ellipse cx="15"    cy="10"    rx="3" ry="4.5" transform="rotate(0, 15, 10)"       fill="#D9A0AE" fillOpacity="0.6" />
+            <ellipse cx="11.55" cy="14.76" rx="3" ry="4.5" transform="rotate(72, 11.55, 14.76)" fill="#D9A0AE" fillOpacity="0.6" />
+            <ellipse cx="5.955" cy="12.94" rx="3" ry="4.5" transform="rotate(144, 5.955, 12.94)" fill="#D9A0AE" fillOpacity="0.6" />
+            <ellipse cx="5.955" cy="7.061" rx="3" ry="4.5" transform="rotate(216, 5.955, 7.061)" fill="#D9A0AE" fillOpacity="0.6" />
+            <ellipse cx="11.55" cy="5.245" rx="3" ry="4.5" transform="rotate(288, 11.55, 5.245)" fill="#D9A0AE" fillOpacity="0.6" />
             <circle cx="10" cy="10" r="2" fill="#C4788A" fillOpacity="0.7" />
           </svg>
           <span className="text-w-rose font-cormorant text-3xl italic">&amp;</span>
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-            {[0, 72, 144, 216, 288].map((a) => {
-              const r = (a * Math.PI) / 180
-              return <ellipse key={a} cx={10 + Math.cos(r) * 5} cy={10 + Math.sin(r) * 5}
-                rx="3" ry="4.5" transform={`rotate(${a}, ${10 + Math.cos(r) * 5}, ${10 + Math.sin(r) * 5})`}
-                fill="#D9A0AE" fillOpacity="0.6" />
-            })}
+            <ellipse cx="15"    cy="10"    rx="3" ry="4.5" transform="rotate(0, 15, 10)"       fill="#D9A0AE" fillOpacity="0.6" />
+            <ellipse cx="11.55" cy="14.76" rx="3" ry="4.5" transform="rotate(72, 11.55, 14.76)" fill="#D9A0AE" fillOpacity="0.6" />
+            <ellipse cx="5.955" cy="12.94" rx="3" ry="4.5" transform="rotate(144, 5.955, 12.94)" fill="#D9A0AE" fillOpacity="0.6" />
+            <ellipse cx="5.955" cy="7.061" rx="3" ry="4.5" transform="rotate(216, 5.955, 7.061)" fill="#D9A0AE" fillOpacity="0.6" />
+            <ellipse cx="11.55" cy="5.245" rx="3" ry="4.5" transform="rotate(288, 11.55, 5.245)" fill="#D9A0AE" fillOpacity="0.6" />
             <circle cx="10" cy="10" r="2" fill="#C4788A" fillOpacity="0.7" />
           </svg>
         </motion.div>

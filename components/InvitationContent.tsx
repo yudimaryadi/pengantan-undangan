@@ -9,8 +9,10 @@ import { CountdownSection } from './sections/CountdownSection'
 import { EventSection } from './sections/EventSection'
 import { GallerySection } from './sections/GallerySection'
 import { LoveStorySection } from './sections/LoveStorySection'
-import { WishesSection } from './sections/WishesSection'
 import { ClosingSection } from './sections/ClosingSection'
+import { PhotoboxTicketSection } from './sections/PhotoboxTicketSection'
+import { TriviaSection } from './sections/TriviaSection'
+import { WishTreeSection } from './sections/WishTreeSection'
 import { type WeddingData } from '@/lib/weddingData'
 
 // Requirements: 8.1, 8.2, 8.3, 8.4
@@ -43,18 +45,14 @@ export function InvitationContent({ isVisible, data, guestName }: InvitationCont
   const eventRef = useRef<HTMLDivElement>(null)
   const galleryRef = useRef<HTMLDivElement>(null)
   const loveStoryRef = useRef<HTMLDivElement>(null)
-  const wishesRef = useRef<HTMLDivElement>(null)
+  const triviaRef = useRef<HTMLDivElement>(null)
+  const photoboxRef = useRef<HTMLDivElement>(null)
+  const wishTreeRef = useRef<HTMLDivElement>(null)
   const closingRef = useRef<HTMLDivElement>(null)
 
   const sectionRefs = [
-    heroRef,
-    quranRef,
-    coupleRef,
-    countdownRef,
-    eventRef,
-    galleryRef,
-    loveStoryRef,
-    wishesRef,
+    heroRef, quranRef, coupleRef, countdownRef, eventRef,
+    galleryRef, loveStoryRef, triviaRef, photoboxRef, wishTreeRef,
     closingRef,
   ]
 
@@ -120,23 +118,27 @@ export function InvitationContent({ isVisible, data, guestName }: InvitationCont
         />
       </div>
 
-      {/* 7. Love Story Section — light background (ivory) */}
+      {/* 7. Love Story Section */}
       <div ref={loveStoryRef}>
-        <LoveStorySection
-          items={data.loveStory}
-          isVisible={visibleSet.has(6)}
-        />
+        <LoveStorySection items={data.loveStory} isVisible={visibleSet.has(6)} />
       </div>
 
-      {/* 8. Wishes Section — dark background (forest) */}
-      <div ref={wishesRef}>
-        <WishesSection
-          isVisible={visibleSet.has(7)}
-          guestName={guestName}
-        />
+      {/* 8. Wedding Trivia */}
+      <div ref={triviaRef}>
+        <TriviaSection isVisible={visibleSet.has(7)} />
       </div>
 
-      {/* 9. Closing Section — dark background (maroon) */}
+      {/* 9. Photobox Ticket */}
+      <div ref={photoboxRef}>
+        <PhotoboxTicketSection guestName={guestName || 'Tamu Undangan'} isVisible={visibleSet.has(8)} />
+      </div>
+
+      {/* 10. Wish Tree — ucapan + konfirmasi hadir */}
+      <div ref={wishTreeRef}>
+        <WishTreeSection isVisible={visibleSet.has(9)} guestName={guestName} />
+      </div>
+
+      {/* 11. Closing Section */}
       <div ref={closingRef}>
         <ClosingSection
           groomName={data.groom.nickname}
@@ -144,7 +146,7 @@ export function InvitationContent({ isVisible, data, guestName }: InvitationCont
           groomFullName={data.groom.fullName}
           brideFullName={data.bride.fullName}
           bankAccounts={data.bankAccounts}
-          isVisible={visibleSet.has(8)}
+          isVisible={visibleSet.has(10)}
         />
       </div>
     </div>
