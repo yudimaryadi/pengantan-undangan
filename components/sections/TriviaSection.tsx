@@ -15,7 +15,7 @@ interface TriviaQuestion {
 
 const QUESTIONS: TriviaQuestion[] = [
   {
-    question: 'Di mana Mace & Anne pertama kali bertemu?',
+    question: 'Di mana Yudi & Kiki pertama kali bertemu?',
     options: ['Di kampus', 'Di acara pernikahan teman', 'Di media sosial', 'Di tempat kerja'],
     correct: 0,
     emoji: '✨',
@@ -39,7 +39,7 @@ const QUESTIONS: TriviaQuestion[] = [
     emoji: '💍',
   },
   {
-    question: 'Kapan hari pernikahan Mace & Anne?',
+    question: 'Kapan hari pernikahan Yudi & Kiki?',
     options: ['12 September 2026', '12 Oktober 2026', '12 November 2026', '12 Agustus 2026'],
     correct: 1,
     emoji: '📅',

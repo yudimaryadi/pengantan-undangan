@@ -12,7 +12,7 @@ export interface PersonData {
 
 export interface EventData {
   name: string                // "Akad Nikah" | "Resepsi"
-  date: string                // "Sabtu, 12 Juli 2025"
+  date: string                // "Jumat, 26 Juni 2026"
   time: string                // "09.00 - 11.00 WITA"
   venue: string
   address: string
@@ -104,34 +104,34 @@ export const defaultMusicUrl =
 
 export const weddingData: WeddingData = {
   groom: {
-    fullName: 'Gabriel Marchel',
-    nickname: 'Mace',
-    parentNames: 'Putra dari Bapak H. Syamsul & Ibu Hj. Rahmawati',
+    fullName: 'Yudi Maryadi',
+    nickname: 'Yudi',
+    parentNames: 'Putra dari Bapak H. A Maryadi & Ibu Zakiah',
     photo: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=90&auto=format&fit=crop',
-    instagram: 'macekaka',
+    instagram: 'yudimaryadi_',
   },
   bride: {
-    fullName: 'Malika Anne Shelby',
-    nickname: 'Anne',
-    parentNames: 'Putri dari Bapak H. Jamaluddin & Ibu Hj. Fatimah',
+    fullName: 'Aliza Rizky Shafara',
+    nickname: 'Kiki',
+    parentNames: 'Putri dari Bapak Azil & Ibu Maria Mahdalena',
     photo: 'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=800&q=90&auto=format&fit=crop',
-    instagram: 'cucu.ane',
+    instagram: 'alizarizkyy',
   },
   events: [
     {
       name: 'Akad Nikah',
-      date: 'Sabtu, 12 Oktober 2026',
+      date: '26 Juni 2026',
       time: '09.00 - 11.00 WITA',
-      venue: 'Masjid Agung Sumbawa',
-      address: 'Jl. Garuda No. 1, Sumbawa Besar, NTB',
+      venue: 'Rumah Mempelai Wanita',
+      address: 'Jl. Pasar Baru, No. 12 Arken Taliwang',
       mapsUrl: 'https://maps.google.com/?q=-8.489,117.417',
     },
     {
       name: 'Resepsi',
-      date: 'Sabtu, 12 Oktober 2026',
+      date: '26 Juni 2026',
       time: '11.00 - 14.00 WITA',
-      venue: 'Gedung Serbaguna Sumbawa',
-      address: 'Jl. Diponegoro No. 5, Sumbawa Besar, NTB',
+      venue: 'Villa Muara Nanga',
+      address: 'Jl. Telaga Bertong, Sumbawa Barat, NTB',
       mapsUrl: 'https://maps.google.com/?q=-8.491,117.419',
     },
   ],
@@ -169,12 +169,12 @@ export const weddingData: WeddingData = {
     {
       bank: 'BCA',
       accountNumber: '1234567890',
-      accountName: 'Lorem Ipsum',
+      accountName: 'Yudi Maryadi',
     },
     {
       bank: 'Mandiri',
       accountNumber: '0987654321',
-      accountName: 'Lorem Ipsum',
+      accountName: 'Aliza Rizky Shafara',
     },
   ],
 }
