@@ -24,12 +24,12 @@ const cormorant = Cormorant_Garamond({
 })
 
 export const metadata: Metadata = {
-  title: 'Undangan Pernikahan Mace & Anne',
+  title: 'Undangan Pernikahan Yudi & Kiki',
   description:
-    'Dengan penuh kebahagiaan, kami mengundang Anda untuk hadir di pernikahan Muhammad Mace Hidayat & Siti Nurhaliza Putri pada Sabtu, 12 Juli 2025 di Sumbawa Besar, NTB.',
+    'Dengan penuh kebahagiaan, kami mengundang Anda untuk hadir di pernikahan Yudi Maryadi & Aliza Rizky Shafara pada Jumat, 26 Juni 2026 di Sumbawa Besar, NTB.',
   openGraph: {
-    title: 'Undangan Pernikahan Mace & Anne',
-    description: 'Sabtu, 12 Juli 2025 · Sumbawa Besar, NTB',
+    title: 'Undangan Pernikahan Yudi & Kiki',
+    description: 'Jumat, 26 Juni 2026 · Sumbawa Besar, NTB',
     type: 'website',
   },
 }

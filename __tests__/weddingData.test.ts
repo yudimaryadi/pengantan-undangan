@@ -21,7 +21,7 @@ const validPerson = (): PersonData => ({
 
 const validEvent = (): EventData => ({
   name: 'Akad Nikah',
-  date: 'Sabtu, 12 Juli 2025',
+  date: 'Jumat, 26 Juni 2026',
   time: '09.00 - 11.00 WITA',
   venue: 'Masjid Agung',
   address: 'Jl. Test No. 1',

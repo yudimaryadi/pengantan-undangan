@@ -95,7 +95,7 @@ export function InvitationContent({ isVisible, data, guestName }: InvitationCont
       {/* 4. Countdown Section — dark background (maroon) */}
       <div ref={countdownRef}>
         <CountdownSection
-          targetDate="2026-10-12T09:00:00+08:00"
+          targetDate="2026-06-26T09:00:00+08:00"
           eventName="Hari Pernikahan Kami"
           googleCalendarUrl={googleCalendarUrl}
           isVisible={visibleSet.has(3)}

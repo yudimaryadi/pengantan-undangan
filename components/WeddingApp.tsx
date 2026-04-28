@@ -50,6 +50,7 @@ function WeddingAppInner({ data }: WeddingAppProps) {
         <AnimationLayer
           isActive={true}
           onComplete={() => dispatch('ANIMATION_COMPLETE')}
+          coupleImageUrl="/images/couple-illustration-removebg.png"
         />
       )}
 
