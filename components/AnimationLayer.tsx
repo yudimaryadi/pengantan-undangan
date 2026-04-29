@@ -126,69 +126,6 @@ const BOKEH = Array.from({ length: 12 }, (_, i) => ({
   color: i % 2 === 0 ? '#C4788A' : '#B8965A',
 }))
 
-// ─── Couple silhouette fallback SVG ──────────────────────────────────────────
-function CoupleSilhouette() {
-  return (
-    <svg viewBox="0 0 280 380" fill="none" className="w-full h-auto drop-shadow-lg"
-      style={{ filter: 'drop-shadow(0 8px 24px rgba(196,120,138,0.2))' }}>
-
-      {/* ── Groom (left) ── */}
-      {/* Head */}
-      <ellipse cx="95" cy="52" rx="22" ry="26" fill="#F5D5B8" />
-      {/* Hair */}
-      <ellipse cx="95" cy="34" rx="22" ry="14" fill="#2C1F24" />
-      {/* Neck */}
-      <rect x="88" y="74" width="14" height="16" rx="4" fill="#F5D5B8" />
-      {/* Shirt white */}
-      <path d="M78,88 L112,88 L116,160 L74,160 Z" fill="#FAFAFA" />
-      {/* Bow tie */}
-      <path d="M90,92 L95,97 L100,92 L95,87 Z" fill="#2C1F24" />
-      {/* Suit jacket */}
-      <path d="M68,88 L78,88 L74,160 L62,160 Z" fill="#2C1F24" />
-      <path d="M112,88 L122,88 L118,160 L116,160 Z" fill="#2C1F24" />
-      {/* Suit collar */}
-      <path d="M78,88 L95,110 L112,88 L105,88 L95,105 L85,88 Z" fill="#2C1F24" />
-      {/* Pants */}
-      <path d="M74,160 L116,160 L118,280 L106,280 L95,220 L84,280 L72,280 Z" fill="#2C1F24" />
-      {/* Left arm */}
-      <path d="M68,88 L58,88 L52,160 L64,160 Z" fill="#2C1F24" />
-      {/* Right arm — around bride */}
-      <path d="M122,88 L132,95 L138,155 L126,158 Z" fill="#2C1F24" />
-      {/* Shoes */}
-      <ellipse cx="80" cy="284" rx="14" ry="7" fill="#1A1A1A" />
-      <ellipse cx="110" cy="284" rx="14" ry="7" fill="#1A1A1A" />
-
-      {/* ── Bride (right) ── */}
-      {/* Hijab */}
-      <ellipse cx="185" cy="50" rx="26" ry="28" fill="#2C2C2C" />
-      {/* Face */}
-      <ellipse cx="185" cy="52" rx="18" ry="20" fill="#F5D5B8" />
-      {/* Hijab drape */}
-      <path d="M159,52 Q162,90 168,110 L202,110 Q208,90 211,52 Q200,72 185,72 Q170,72 159,52 Z" fill="#2C2C2C" />
-      {/* Neck */}
-      <rect x="178" y="88" width="14" height="14" rx="4" fill="#F5D5B8" />
-      {/* Dress bodice */}
-      <path d="M162,100 L208,100 L210,170 L160,170 Z" fill="#FAFAFA" />
-      {/* Dress skirt — full A-line */}
-      <path d="M160,170 L210,170 L230,340 L140,340 Z" fill="#FAFAFA" />
-      {/* Dress detail lines */}
-      <path d="M185,100 L185,340" stroke="#E8D4D8" strokeWidth="0.8" strokeOpacity="0.5" />
-      <path d="M172,120 Q185,130 198,120" stroke="#E8D4D8" strokeWidth="0.8" strokeOpacity="0.4" fill="none" />
-      {/* Left arm */}
-      <path d="M162,100 L148,108 L144,165 L158,168 Z" fill="#FAFAFA" />
-      {/* Right arm */}
-      <path d="M208,100 L220,108 L224,165 L210,168 Z" fill="#FAFAFA" />
-      {/* Shoes */}
-      <ellipse cx="162" cy="344" rx="12" ry="6" fill="#F0F0F0" />
-      <ellipse cx="208" cy="344" rx="12" ry="6" fill="#F0F0F0" />
-
-      {/* ── Rose accent ── */}
-      <circle cx="175" cy="165" r="6" fill="#C4788A" fillOpacity="0.5" />
-      <circle cx="175" cy="165" r="3" fill="#D9A0AE" fillOpacity="0.7" />
-    </svg>
-  )
-}
-
 // ─── Main component ───────────────────────────────────────────────────────────
 export function AnimationLayer({ isActive, onComplete, coupleImageUrl }: AnimationLayerProps) {
   const onCompleteRef = useRef(onComplete)
@@ -288,7 +225,7 @@ export function AnimationLayer({ isActive, onComplete, coupleImageUrl }: Animati
 
   if (!isActive) return null
 
-  const imgSrc = coupleImageUrl || '/images/couple-illustration.png'
+  const coupleImg = coupleImageUrl || '/images/couple-illustration.png'
 
   return (
     <motion.div
@@ -332,6 +269,23 @@ export function AnimationLayer({ isActive, onComplete, coupleImageUrl }: Animati
         {/* Ground / grass line */}
         <div className="absolute bottom-0 left-0 right-0 h-32"
           style={{ background: 'linear-gradient(to top, rgba(196,120,138,0.08), transparent)' }} />
+
+        {/* ── Couple illustration (center layer) ── */}
+        <motion.div
+          animate={coupleControls}
+          initial={{ opacity: 0, y: 30 }}
+          className="absolute flex items-end justify-center"
+          style={{ bottom: '5%', left: '50%', transform: 'translateX(-50%)', width: '55%', maxWidth: 320, zIndex: 10 }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={coupleImg}
+            alt="Pengantin"
+            className="w-full h-auto object-contain"
+            style={{ filter: 'drop-shadow(0 8px 24px rgba(196,120,138,0.25))' }}
+            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+          />
+        </motion.div>
 
         {/* ── Background garden flowers (static, far layer) ── */}
         <div className="absolute inset-0 pointer-events-none">
