@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Expand, ImageIcon, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { FloralDivider } from '../ui/FloralDivider'
+import { useScrollAnimation } from '@/hooks/useScrollAnimation'
 
 interface GallerySectionProps {
   photos: string[]
@@ -65,14 +66,19 @@ export function GallerySection({ photos, isVisible = false }: GallerySectionProp
   const prevPhoto = () => setLightboxIndex(i => i !== null ? (i - 1 + photos.length) % photos.length : null)
   const nextPhoto = () => setLightboxIndex(i => i !== null ? (i + 1) % photos.length : null)
 
+  const { ref: headerRef, isInView: headerInView } = useScrollAnimation({ once: true, amount: 0.3 })
+  const { ref: gridRef, isInView: gridInView } = useScrollAnimation({ once: true, amount: 0.1 })
+  const inView = isVisible || gridInView
+
   return (
     <section className="relative py-24 px-4 sm:px-6 bg-w-bgAlt overflow-hidden">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-w-border to-transparent" />
 
       <div className="relative z-10 max-w-6xl mx-auto">
         <motion.div
+          ref={headerRef}
           initial={{ opacity: 0, y: 20 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : {}}
+          animate={(isVisible || headerInView) ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
           className="text-center mb-12"
         >
@@ -81,10 +87,20 @@ export function GallerySection({ photos, isVisible = false }: GallerySectionProp
           <FloralDivider variant="rose" className="mt-4 mb-0" />
         </motion.div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 md:gap-1.5">
+        <div ref={gridRef} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 md:gap-1.5">
           {photos.map((src, index) => (
-            <GalleryItem key={`${src}-${index}`} src={src} index={index}
-              isVisible={isVisible} onClick={() => openLightbox(index)} />
+            <motion.div
+              key={`${src}-${index}`}
+              initial={{ opacity: 0, scale: 0.85, y: 20 }}
+              animate={inView ? { opacity: 1, scale: 1, y: 0 } : {}}
+              transition={{
+                duration: 0.5,
+                delay: (index % 12) * 0.06,
+                ease: [0.25, 0.46, 0.45, 0.94],
+              }}
+            >
+              <GalleryItem src={src} index={index} isVisible={inView} onClick={() => openLightbox(index)} />
+            </motion.div>
           ))}
         </div>
       </div>
