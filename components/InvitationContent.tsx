@@ -7,12 +7,12 @@ import { QuranVerseSection } from './sections/QuranVerseSection'
 import { CoupleSection } from './sections/CoupleSection'
 import { CountdownSection } from './sections/CountdownSection'
 import { EventSection } from './sections/EventSection'
-import { GallerySection } from './sections/GallerySection'
 import { LoveStorySection } from './sections/LoveStorySection'
 import { ClosingSection } from './sections/ClosingSection'
 import { PhotoboxTicketSection } from './sections/PhotoboxTicketSection'
 import { TriviaSection } from './sections/TriviaSection'
 import { WishTreeSection } from './sections/WishTreeSection'
+import { ScrollProgressBar } from './ui/ScrollProgressBar'
 import { type WeddingData } from '@/lib/weddingData'
 
 // Requirements: 8.1, 8.2, 8.3, 8.4
@@ -65,6 +65,8 @@ export function InvitationContent({ isVisible, data, guestName }: InvitationCont
 
   return (
     <div className="overflow-x-hidden">
+      {/* Scroll progress bar */}
+      <ScrollProgressBar />
       {/* 1. Hero Section */}
       <div ref={heroRef}>
         <HeroSection
@@ -110,13 +112,13 @@ export function InvitationContent({ isVisible, data, guestName }: InvitationCont
         />
       </div>
 
-      {/* 6. Gallery Section — dark background (maroon) */}
-      <div ref={galleryRef}>
+      {/* 6. Gallery Section — HIDDEN sementara */}
+      {/* <div ref={galleryRef}>
         <GallerySection
           photos={data.gallery}
           isVisible={visibleSet.has(5)}
         />
-      </div>
+      </div> */}
 
       {/* 7. Love Story Section */}
       <div ref={loveStoryRef}>

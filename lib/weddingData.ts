@@ -107,14 +107,14 @@ export const weddingData: WeddingData = {
     fullName: 'Yudi Maryadi',
     nickname: 'Yudi',
     parentNames: 'Putra dari Bapak H. A Maryadi & Ibu Zakiah',
-    photo: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=90&auto=format&fit=crop',
+    photo: '/images/yudi-3D.png',
     instagram: 'yudimaryadi_',
   },
   bride: {
     fullName: 'Aliza Rizky Shafara',
     nickname: 'Kiki',
     parentNames: 'Putri dari Bapak Azil & Ibu Maria Mahdalena',
-    photo: 'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=800&q=90&auto=format&fit=crop',
+    photo: '/images/kiki-3D.png',
     instagram: 'alizarizkyy',
   },
   events: [
