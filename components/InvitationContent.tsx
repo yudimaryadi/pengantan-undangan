@@ -7,7 +7,6 @@ import { QuranVerseSection } from './sections/QuranVerseSection'
 import { CoupleSection } from './sections/CoupleSection'
 import { CountdownSection } from './sections/CountdownSection'
 import { EventSection } from './sections/EventSection'
-import { LoveStorySection } from './sections/LoveStorySection'
 import { ClosingSection } from './sections/ClosingSection'
 import { PhotoboxTicketSection } from './sections/PhotoboxTicketSection'
 import { TriviaSection } from './sections/TriviaSection'
@@ -120,10 +119,10 @@ export function InvitationContent({ isVisible, data, guestName }: InvitationCont
         />
       </div> */}
 
-      {/* 7. Love Story Section */}
-      <div ref={loveStoryRef}>
+      {/* 7. Love Story Section — HIDDEN sementara */}
+      {/* <div ref={loveStoryRef}>
         <LoveStorySection items={data.loveStory} isVisible={visibleSet.has(6)} />
-      </div>
+      </div> */}
 
       {/* 8. Wedding Trivia */}
       <div ref={triviaRef}>

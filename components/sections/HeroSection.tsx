@@ -1,12 +1,12 @@
 'use client'
 
-import Image from 'next/image'
-import { useState, useRef } from 'react'
+import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { FloralCorner } from '../ui/FloralCorner'
 import { FloralDivider } from '../ui/FloralDivider'
 import { TextReveal } from '../ui/TextReveal'
 import { useScrollAnimation } from '@/hooks/useScrollAnimation'
+import { CoupleScene3D } from '../CoupleScene3D'
 import { type PersonData } from '@/lib/weddingData'
 
 interface HeroSectionProps {
@@ -35,13 +35,11 @@ const PETALS = [
 ]
 
 export function HeroSection({ groom, bride, eventDate, isVisible = false }: HeroSectionProps) {
-  const [coupleError, setCoupleError] = useState(false)
   const { ref, isInView } = useScrollAnimation({ once: true, amount: 0.2 })
 
   const sectionRef = useRef<HTMLElement>(null)
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] })
   const petalY = useTransform(scrollYProgress, [0, 1], ['0%', '-30%'])
-  const coupleY = useTransform(scrollYProgress, [0, 1], ['0%', '-8%'])
 
   const inView = isVisible || isInView
 
@@ -83,54 +81,62 @@ export function HeroSection({ groom, bride, eventDate, isVisible = false }: Hero
           initial={{ opacity: 0, letterSpacing: '0.1em' }}
           animate={inView ? { opacity: 1, letterSpacing: '0.5em' } : {}}
           transition={{ duration: 1.2 }}
-          className="text-w-rose font-poppins font-light text-[10px] tracking-[0.5em] uppercase mb-8"
+          className="text-w-rose font-poppins font-light text-[10px] tracking-[0.5em] uppercase mb-6"
         >
           The Wedding of
         </motion.p>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30, scale: 0.95 }}
-          animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
-          transition={{ duration: 1.0, delay: 0.1 }}
-          style={{ y: coupleY }}
-          className="relative mb-8 flex justify-center w-full"
-        >
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="w-56 h-56 rounded-full"
-              style={{ background: 'radial-gradient(circle, rgba(196,120,138,0.14) 0%, transparent 70%)' }} />
+        {/* ── Layout: karakter 3D kiri-kanan, nama di tengah ── */}
+        <div className="relative w-full flex items-center justify-center mb-6"
+          style={{ height: 'min(340px, 85vw)' }}>
+
+          {/* Three.js canvas — full width, pointer-events-none agar tidak block klik */}
+          <div className="absolute inset-0 pointer-events-none">
+            <CoupleScene3D
+              groomImageUrl="/images/yudi-3D-full.png"
+              brideImageUrl="/images/kiki-3D-full.png"
+              className="w-full h-full"
+            />
           </div>
-          {!coupleError ? (
-            <div className="relative" style={{ width: 'min(260px, 65vw)', height: 'min(350px, 88vw)' }}>
-              <Image src="/images/couple-illustration-removebg.png" alt={`${groom.fullName} & ${bride.fullName}`}
-                fill className="object-contain" priority
-                style={{ filter: 'drop-shadow(0 10px 28px rgba(196,120,138,0.22))' }}
-                onError={() => setCoupleError(true)} />
+
+          {/* Nama pengantin di tengah — z-index lebih tinggi dari canvas */}
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
+            transition={{ duration: 0.9, delay: 0.3 }}
+            className="relative z-10 flex flex-col items-center"
+            style={{ textShadow: '0 2px 12px rgba(253,248,245,0.9), 0 0 24px rgba(253,248,245,0.8)' }}
+          >
+            <div className="font-cormorant font-light text-w-ink text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-none tracking-wide overflow-hidden">
+              <TextReveal text={groom.fullName} isInView={inView} delay={0.3} staggerDelay={0.025} />
             </div>
-          ) : (
-            <div className="relative rounded-full overflow-hidden border-4 border-w-border shadow-card"
-              style={{ width: 200, height: 200 }}>
-              <Image src={groom.photo} alt={groom.fullName} fill className="object-cover" />
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              animate={inView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ duration: 0.5, delay: 0.6 }}
+              className="my-3 flex items-center gap-4"
+            >
+              <div className="h-px w-10 bg-w-border" />
+              <span className="text-w-rose font-cormorant text-2xl italic">&amp;</span>
+              <div className="h-px w-10 bg-w-border" />
+            </motion.div>
+
+            <div className="font-cormorant font-light text-w-ink text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-none tracking-wide overflow-hidden">
+              <TextReveal text={bride.fullName} isInView={inView} delay={0.5} staggerDelay={0.025} />
             </div>
-          )}
-        </motion.div>
+          </motion.div>
 
-        <div className="font-cormorant font-light text-w-ink text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-none tracking-wide mb-3 overflow-hidden">
-          <TextReveal text={groom.fullName} isInView={inView} delay={0.3} staggerDelay={0.025} />
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0 }}
-          animate={inView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 0.5, delay: 0.6 }}
-          className="my-3 flex items-center gap-4"
-        >
-          <div className="h-px w-10 bg-w-border" />
-          <span className="text-w-rose font-cormorant text-2xl italic">&amp;</span>
-          <div className="h-px w-10 bg-w-border" />
-        </motion.div>
-
-        <div className="font-cormorant font-light text-w-ink text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-none tracking-wide mb-8 overflow-hidden">
-          <TextReveal text={bride.fullName} isInView={inView} delay={0.5} staggerDelay={0.025} />
+          {/* Floral swirl corners — dekoratif */}
+          <div className="absolute top-0 left-0 w-14 h-14 pointer-events-none opacity-40 z-10">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/ornaments/floral-swirl.svg" alt="" className="w-full h-full" />
+          </div>
+          <div className="absolute top-0 right-0 w-14 h-14 pointer-events-none opacity-40 z-10"
+            style={{ transform: 'scaleX(-1)' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/ornaments/floral-swirl.svg" alt="" className="w-full h-full" />
+          </div>
         </div>
 
         <FloralDivider variant="rose" className="my-2" />

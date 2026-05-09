@@ -124,7 +124,7 @@ export const weddingData: WeddingData = {
       time: '09.00 - 11.00 WITA',
       venue: 'Rumah Mempelai Wanita',
       address: 'Jl. Pasar Baru, No. 12 Arken Taliwang',
-      mapsUrl: 'https://maps.google.com/?q=-8.489,117.417',
+      mapsUrl: 'https://maps.app.goo.gl/a9ASd8ymJZzfpAScA',
     },
     {
       name: 'Resepsi',
@@ -132,7 +132,7 @@ export const weddingData: WeddingData = {
       time: '11.00 - 14.00 WITA',
       venue: 'Villa Muara Nanga',
       address: 'Jl. Telaga Bertong, Sumbawa Barat, NTB',
-      mapsUrl: 'https://maps.google.com/?q=-8.491,117.419',
+      mapsUrl: 'https://maps.app.goo.gl/aPbQy8Cn5F9dDwfG6',
     },
   ],
   gallery: dummyGallery,
@@ -168,12 +168,12 @@ export const weddingData: WeddingData = {
   bankAccounts: [
     {
       bank: 'BCA',
-      accountNumber: '1234567890',
+      accountNumber: '7100076947',
       accountName: 'Yudi Maryadi',
     },
     {
-      bank: 'Mandiri',
-      accountNumber: '0987654321',
+      bank: 'BNI',
+      accountNumber: '1804057264',
       accountName: 'Aliza Rizky Shafara',
     },
   ],
