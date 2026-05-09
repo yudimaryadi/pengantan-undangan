@@ -2,8 +2,8 @@
 
 import { useState, useEffect, FormEvent } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Send, AlertCircle, CheckCircle2, XCircle } from 'lucide-react'
-import { safeGetItem, safeSetItem } from '@/lib/storage'
+import { Send, AlertCircle, CheckCircle2, XCircle, Loader2 } from 'lucide-react'
+import { supabase, type WishRecord } from '@/lib/supabase'
 import { FloralDivider } from '../ui/FloralDivider'
 import { FloralCorner } from '../ui/FloralCorner'
 
@@ -19,13 +19,11 @@ interface WishFlower {
   rotation: number
 }
 
-// Pink flowers for "hadir", gold/mauve for "tidak_hadir"
-const HADIR_COLORS    = ['#D9A0AE', '#E8B4C0', '#C4788A', '#F2DDE2', '#C49AAA']
+const HADIR_COLORS     = ['#D9A0AE', '#E8B4C0', '#C4788A', '#F2DDE2', '#C49AAA']
 const TIDAKHADIR_COLORS = ['#D4B47A', '#E2C99A', '#B8965A', '#C4A8B0', '#9B7285']
 
-const STORAGE_KEY = 'wedding-wish-tree'
-
 function generateFlower(
+  id: string,
   name: string,
   message: string,
   attendance: 'hadir' | 'tidak_hadir',
@@ -34,7 +32,7 @@ function generateFlower(
   const seed = index * 137.508
   const colors = attendance === 'hadir' ? HADIR_COLORS : TIDAKHADIR_COLORS
   return {
-    id: `flower-${index}`,
+    id,
     name,
     message,
     attendance,
@@ -48,28 +46,22 @@ function generateFlower(
 
 function FlowerSVG({ size, color, rotation }: { size: number; color: string; rotation: number }) {
   const s = 8 + size * 5
-  // Pre-compute petal positions to avoid SSR hydration mismatch
-  // [0, 45, 90, 135, 180, 225, 270, 315] * s * 0.7
   const r = s * 0.7
   const petals = [
-    { cx: r,           cy: 0,            a: 0   },
-    { cx: r * 0.7071,  cy: r * 0.7071,   a: 45  },
-    { cx: 0,           cy: r,            a: 90  },
-    { cx: -r * 0.7071, cy: r * 0.7071,   a: 135 },
-    { cx: -r,          cy: 0,            a: 180 },
-    { cx: -r * 0.7071, cy: -r * 0.7071,  a: 225 },
-    { cx: 0,           cy: -r,           a: 270 },
-    { cx: r * 0.7071,  cy: -r * 0.7071,  a: 315 },
+    { cx: r,           cy: 0,           a: 0   },
+    { cx: r * 0.7071,  cy: r * 0.7071,  a: 45  },
+    { cx: 0,           cy: r,           a: 90  },
+    { cx: -r * 0.7071, cy: r * 0.7071,  a: 135 },
+    { cx: -r,          cy: 0,           a: 180 },
+    { cx: -r * 0.7071, cy: -r * 0.7071, a: 225 },
+    { cx: 0,           cy: -r,          a: 270 },
+    { cx: r * 0.7071,  cy: -r * 0.7071, a: 315 },
   ]
   return (
     <svg width={s * 2.5} height={s * 2.5} viewBox="-20 -20 40 40" fill="none">
       {petals.map(({ cx, cy, a }) => (
-        <ellipse key={a}
-          cx={cx} cy={cy}
-          rx={s * 0.35} ry={s * 0.55}
-          transform={`rotate(${a + rotation}, ${cx}, ${cy})`}
-          fill={color} fillOpacity="0.8"
-        />
+        <ellipse key={a} cx={cx} cy={cy} rx={s * 0.35} ry={s * 0.55}
+          transform={`rotate(${a + rotation}, ${cx}, ${cy})`} fill={color} fillOpacity="0.8" />
       ))}
       <circle r={s * 0.3} fill={color} />
       <circle r={s * 0.15} fill="#FDF8F5" fillOpacity="0.9" />
@@ -89,19 +81,47 @@ export function WishTreeSection({ isVisible = false, guestName = '' }: WishTreeS
   const [attendance, setAttendance] = useState<'hadir' | 'tidak_hadir'>('hadir')
   const [error, setError] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [submitting, setSubmitting] = useState(false)
   const [hoveredId, setHoveredId] = useState<string | null>(null)
 
-  // Load from localStorage
+  // Load wishes from Supabase on mount
   useEffect(() => {
-    const stored = safeGetItem(STORAGE_KEY)
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored) as Array<{
-          name: string; message: string; attendance: 'hadir' | 'tidak_hadir'
-        }>
-        setFlowers(parsed.map((w, i) => generateFlower(w.name, w.message, w.attendance ?? 'hadir', i)))
-      } catch { /* ignore */ }
+    const fetchWishes = async () => {
+      setLoading(true)
+      const { data, error: fetchError } = await supabase
+        .from('wishes')
+        .select('*')
+        .order('created_at', { ascending: true })
+
+      if (!fetchError && data) {
+        const mapped = (data as WishRecord[]).map((w, i) =>
+          generateFlower(w.id, w.name, w.message, w.attendance, i)
+        )
+        setFlowers(mapped)
+      }
+      setLoading(false)
     }
+
+    fetchWishes()
+
+    // Real-time subscription — new wishes from OTHER users appear instantly
+    const channel = supabase
+      .channel('wishes-realtime')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'wishes' },
+        (payload) => {
+          const w = payload.new as WishRecord
+          setFlowers(prev => {
+            // Dedup: skip if flower with same id already exists (optimistic update)
+            if (prev.some(f => f.id === w.id)) return prev
+            const newFlower = generateFlower(w.id, w.name, w.message, w.attendance, prev.length)
+            return [...prev, newFlower]
+          })
+        }
+      )
+      .subscribe()
+
+    return () => { supabase.removeChannel(channel) }
   }, [])
 
   // Auto-fill name from ?to= param
@@ -109,23 +129,38 @@ export function WishTreeSection({ isVisible = false, guestName = '' }: WishTreeS
     if (guestName) setName(guestName)
   }, [guestName])
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setError('')
     if (!name.trim()) { setError('Nama tidak boleh kosong.'); return }
     if (!message.trim()) { setError('Ucapan tidak boleh kosong.'); return }
 
-    const stored = safeGetItem(STORAGE_KEY)
-    const existing: Array<{ name: string; message: string; attendance: 'hadir' | 'tidak_hadir' }> =
-      stored ? JSON.parse(stored) : []
+    setSubmitting(true)
+    const { data: inserted, error: insertError } = await supabase
+      .from('wishes')
+      .insert([{ name: name.trim(), message: message.trim(), attendance }])
+      .select()
+      .single()
 
-    const updated = [...existing, { name: name.trim(), message: message.trim(), attendance }]
-    safeSetItem(STORAGE_KEY, JSON.stringify(updated))
+    setSubmitting(false)
 
-    const newFlower = generateFlower(name.trim(), message.trim(), attendance, flowers.length)
-    setFlowers(prev => [...prev, newFlower])
+    if (insertError) {
+      setError('Gagal mengirim ucapan. Coba lagi.')
+      return
+    }
+
+    // Optimistic update — langsung tampilkan bunga tanpa menunggu realtime
+    if (inserted) {
+      const w = inserted as WishRecord
+      setFlowers(prev => {
+        // Dedup check
+        if (prev.some(f => f.id === w.id)) return prev
+        const newFlower = generateFlower(w.id, w.name, w.message, w.attendance, prev.length)
+        return [...prev, newFlower]
+      })
+    }
+
     setMessage('')
-    // Keep name (don't reset — tamu mungkin mau kirim lagi)
     setSubmitted(true)
     setTimeout(() => setSubmitted(false), 3000)
   }
@@ -182,8 +217,15 @@ export function WishTreeSection({ isVisible = false, guestName = '' }: WishTreeS
             <path d="M65,160 Q82,154 100,158" stroke="#A07840" strokeWidth="3" strokeLinecap="round" fill="none" strokeOpacity="0.18" />
           </svg>
 
+          {/* Loading state */}
+          {loading && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Loader2 className="w-6 h-6 text-w-rose animate-spin" />
+            </div>
+          )}
+
           {/* Empty state */}
-          {flowers.length === 0 && (
+          {!loading && flowers.length === 0 && (
             <div className="absolute inset-0 flex items-center justify-center">
               <p className="text-w-subtle font-poppins font-light text-sm italic text-center px-8">
                 Jadilah yang pertama menanam bunga doa 🌱
@@ -352,10 +394,12 @@ export function WishTreeSection({ isVisible = false, guestName = '' }: WishTreeS
             )}
           </AnimatePresence>
 
-          <button type="submit" aria-label="Tanam bunga doa"
-            className="flex items-center justify-center gap-2 w-full min-h-[48px] px-6 py-3 bg-w-rose text-white font-poppins font-medium text-xs tracking-[0.2em] uppercase shadow-rose hover:bg-w-mauve transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-w-rose focus:ring-offset-2">
-            <Send className="w-3.5 h-3.5" />
-            Tanam Bunga Doa
+          <button type="submit" disabled={submitting} aria-label="Tanam bunga doa"
+            className="flex items-center justify-center gap-2 w-full min-h-[48px] px-6 py-3 bg-w-rose text-white font-poppins font-medium text-xs tracking-[0.2em] uppercase shadow-rose hover:bg-w-mauve disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-w-rose focus:ring-offset-2">
+            {submitting
+              ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Mengirim...</>
+              : <><Send className="w-3.5 h-3.5" /> Tanam Bunga Doa</>
+            }
           </button>
         </motion.form>
       </div>

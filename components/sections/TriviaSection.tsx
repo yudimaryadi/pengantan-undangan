@@ -16,31 +16,31 @@ interface TriviaQuestion {
 const QUESTIONS: TriviaQuestion[] = [
   {
     question: 'Di mana Yudi & Kiki pertama kali bertemu?',
-    options: ['Di kampus', 'Di acara pernikahan teman', 'Di media sosial', 'Di tempat kerja'],
+    options: ['Di Sekolah', 'Di acara pernikahan teman', 'Di media sosial', 'Di tempat kerja'],
     correct: 0,
     emoji: '✨',
   },
   {
     question: 'Bulan berapa mereka mulai dekat?',
-    options: ['Maret 2020', 'Juni 2020', 'September 2020', 'Desember 2020'],
+    options: ['Maret 2020', 'September 2017', 'September 2022', 'Mei 2015'],
     correct: 1,
     emoji: '💬',
   },
   {
     question: 'Di kota mana pernikahan ini dilangsungkan?',
-    options: ['Mataram', 'Bima', 'Sumbawa Besar', 'Dompu'],
+    options: ['Mataram', 'Bima', 'Sumbawa Barat', 'Dompu'],
     correct: 2,
     emoji: '🕌',
   },
   {
     question: 'Apa nama lengkap pengantin pria?',
-    options: ['Gabriel Marchel', 'Gabriel Marcel', 'Gabrielle Marchel', 'Gabriel Marsel'],
-    correct: 0,
+    options: ['Yudi Saputra', 'Muhammad Yudi', 'Yudi Maryadi', 'Yudi Shelby'],
+    correct: 2,
     emoji: '💍',
   },
   {
     question: 'Kapan hari pernikahan Yudi & Kiki?',
-    options: ['12 September 2026', '12 Oktober 2026', '12 November 2026', '12 Agustus 2026'],
+    options: ['12 September 2026', '26 Juni 2026', '12 November 2026', '12 Agustus 2026'],
     correct: 1,
     emoji: '📅',
   },

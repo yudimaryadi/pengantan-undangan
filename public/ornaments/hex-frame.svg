@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140" fill="none">
+  <!-- Hexagon utama -->
+  <polygon points="60,8 108,35 108,105 60,132 12,105 12,35"
+    stroke="#B8965A" stroke-width="1.5" fill="none" opacity="0.7"/>
+  <!-- Hexagon dalam (double border) -->
+  <polygon points="60,16 100,40 100,100 60,124 20,100 20,40"
+    stroke="#D4B47A" stroke-width="0.8" fill="none" opacity="0.4"/>
+  <!-- Ornamen sudut hexagon -->
+  <circle cx="60" cy="8"   r="3" fill="#B8965A" opacity="0.7"/>
+  <circle cx="108" cy="35" r="3" fill="#B8965A" opacity="0.7"/>
+  <circle cx="108" cy="105" r="3" fill="#B8965A" opacity="0.7"/>
+  <circle cx="60" cy="132" r="3" fill="#B8965A" opacity="0.7"/>
+  <circle cx="12" cy="105" r="3" fill="#B8965A" opacity="0.7"/>
+  <circle cx="12" cy="35"  r="3" fill="#B8965A" opacity="0.7"/>
+  <!-- Diamond kecil di tengah setiap sisi -->
+  <path d="M84,21.5 L87,24 L84,26.5 L81,24 Z" fill="#D4B47A" opacity="0.6"/>
+  <path d="M108,70 L111,70 L108,73 L105,70 Z" fill="#D4B47A" opacity="0.6"/>
+  <path d="M84,118.5 L87,116 L84,113.5 L81,116 Z" fill="#D4B47A" opacity="0.6"/>
+  <path d="M36,118.5 L33,116 L36,113.5 L39,116 Z" fill="#D4B47A" opacity="0.6"/>
+  <path d="M12,70 L9,70 L12,67 L15,70 Z" fill="#D4B47A" opacity="0.6"/>
+  <path d="M36,21.5 L33,24 L36,26.5 L39,24 Z" fill="#D4B47A" opacity="0.6"/>
+</svg>

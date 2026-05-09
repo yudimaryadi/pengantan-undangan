@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48" fill="none">
+  <!-- Kelopak tunggal dengan vein -->
+  <path d="M16,2 C22,8 26,20 24,32 C22,40 18,46 16,46 C14,46 10,40 8,32 C6,20 10,8 16,2 Z"
+    fill="#D9A0AE" fill-opacity="0.82"/>
+  <!-- Highlight -->
+  <path d="M16,2 C18,8 20,18 19,28 C18,36 17,42 16,44"
+    stroke="#F2DDE2" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.6"/>
+  <!-- Vein tengah -->
+  <line x1="16" y1="6" x2="16" y2="42" stroke="#C4788A" stroke-width="0.6" opacity="0.4"/>
+  <!-- Vein samping -->
+  <path d="M16,18 C13,20 11,22 10,25" stroke="#C4788A" stroke-width="0.5" opacity="0.3" fill="none"/>
+  <path d="M16,18 C19,20 21,22 22,25" stroke="#C4788A" stroke-width="0.5" opacity="0.3" fill="none"/>
+</svg>
